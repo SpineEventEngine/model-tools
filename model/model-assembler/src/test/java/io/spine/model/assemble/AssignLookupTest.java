@@ -20,18 +20,20 @@
 
 package io.spine.model.assemble;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Dmytro Dashenkov
  */
-public class AssignLookupShould extends SpineAnnotationProcessorShould {
+@DisplayName("AssignLookup should")
+class AssignLookupTest extends SpineAnnotationProcessorTest {
 
     @Override
     protected SpineAnnotationProcessor processor() {
@@ -39,7 +41,8 @@ public class AssignLookupShould extends SpineAnnotationProcessorShould {
     }
 
     @Test
-    public void support_spineDirRoot_option() {
+    @DisplayName("support `spineDirRoot` option")
+    void supportSpineDirRoot() {
         final Set<String> opts = processor().getSupportedOptions();
         assertEquals(1, opts.size());
         assertThat(opts, contains(AssignLookup.OUTPUT_OPTION_NAME));
