@@ -24,19 +24,17 @@ import com.google.protobuf.Any;
 import com.google.protobuf.UInt64Value;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.command.Assign;
-import io.spine.server.test.shared.EmptyAggregate;
-import io.spine.server.test.shared.EmptyAggregateVBuilder;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * An Aggregate with n invalid command handler method.
+ * An Aggregate with invalid command handler method.
  *
  * <p>{@link #handle()} method has no arguments and is marked with {@link Assign}, which makes it
  * an invalid command handler method.
  */
-public class MalformedAggregate extends Aggregate<String, EmptyAggregate, EmptyAggregateVBuilder> {
+public class MalformedAggregate extends Aggregate<String, VoidState, VoidStateVBuilder> {
 
     protected MalformedAggregate(String id) {
         super(id);
