@@ -18,14 +18,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-    apply from: "$rootDir/version.gradle"
-}
+/**
+ * Test environment for the {@link io.spine.model.assemble} package.
+ */
 
-group 'io.spine.tools'
+@CheckReturnValue
+@ParametersAreNonnullByDefault
+package io.spine.model.assemble.given;
 
-dependencies {
-    implementation project(':server')
+import com.google.errorprone.annotations.CheckReturnValue;
 
-    testImplementation "io.spine:spine-testlib:$spineBaseVersion"
-}
+import javax.annotation.ParametersAreNonnullByDefault;
