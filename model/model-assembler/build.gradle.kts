@@ -19,13 +19,15 @@
  */
 
 buildscript {
-    apply from: "$rootDir/version.gradle"
+    apply(from = "$rootDir/version.gradle.kts")
 }
 
-group 'io.spine.tools'
+group = "io.spine.tools"
+
+val spineBaseVersion: String by extra
 
 dependencies {
-    implementation project(':server')
+    implementation(project(":server"))
 
-    testImplementation "io.spine:spine-testlib:$spineBaseVersion"
+    testImplementation("io.spine:spine-testlib:$spineBaseVersion")
 }

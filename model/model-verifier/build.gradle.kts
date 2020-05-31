@@ -18,39 +18,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.gradle.internal.Deps
+
 buildscript {
-    apply from: "$rootDir/version.gradle"
+    apply(from = "$rootDir/version.gradle.kts")
 }
 
-group 'io.spine.tools'
+group = "io.spine.tools"
 
-sourceSets {
-    main {
-        resources.srcDirs "$sourcesRootDir/main/resources"
-    }
-    test {
-        resources.srcDirs "$sourcesRootDir/test/resources"
-    }
-}
+val spineBaseVersion: String by extra
 
 dependencies {
-    implementation gradleApi()
-    implementation "io.spine.tools:spine-plugin-base:$spineBaseVersion"
-    implementation "io.spine.tools:spine-model-compiler:$spineBaseVersion"
-    implementation project(':server')
-    implementation project(':model-assembler')
+    implementation(gradleApi())
+    implementation("io.spine.tools:spine-plugin-base:$spineBaseVersion")
+    implementation("io.spine.tools:spine-model-compiler:$spineBaseVersion")
+    implementation(project(":server"))
+    implementation(project(":model-assembler"))
 
-    testImplementation gradleTestKit()
-    testImplementation "io.spine:spine-testlib:$spineBaseVersion"
-    testImplementation "io.spine.tools:spine-plugin-testlib:$spineBaseVersion"
-    testImplementation deps.test.junitPioneer
-    testImplementation project(":testutil-server")
+    testImplementation(gradleTestKit())
+    testImplementation("io.spine:spine-testlib:$spineBaseVersion")
+    testImplementation("io.spine.tools:spine-plugin-testlib:$spineBaseVersion")
+    testImplementation(Deps.test.junitPioneer)
+    testImplementation(project(":testutil-server"))
 }
 
-test {
-    dependsOn publishToMavenLocal
-    dependsOn project(':core').publishToMavenLocal
-    dependsOn project(':client').publishToMavenLocal
-    dependsOn project(':server').publishToMavenLocal
-    dependsOn project(':model-assembler').publishToMavenLocal
+tasks.test {
+    dependsOn("publishToMavenLocal",
+              ":core:publishToMavenLocal",
+              ":client:publishToMavenLocal",
+              ":server:publishToMavenLocal",
+              ":model-assembler:publishToMavenLocal")
 }
