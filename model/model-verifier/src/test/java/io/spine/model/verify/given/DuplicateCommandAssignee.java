@@ -24,25 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.verify;
+package io.spine.model.verify.given;
 
-import io.spine.base.EventMessage;
-import io.spine.server.command.AbstractCommandHandler;
+import io.spine.server.command.AbstractCommandAssignee;
 import io.spine.server.command.Assign;
+import io.spine.test.model.verify.command.UploadPhoto;
+import io.spine.test.model.verify.event.PhotoUploaded;
 
-import java.util.List;
-
-import static java.util.Collections.singletonList;
-
-/**
- * A CommandHandler with a valid command handler method.
- */
-public class ValidCommandHandler extends AbstractCommandHandler {
+public class DuplicateCommandAssignee extends AbstractCommandAssignee {
 
     @Assign
-    List<? extends EventMessage> handle(SendLink command) {
-        return singletonList(LinkSent.newBuilder()
-                                     .setLink(command.getLink())
-                                     .build());
+    PhotoUploaded handle(UploadPhoto command) {
+        return PhotoUploaded
+                .newBuilder()
+                .setPhoto(command.getPhoto())
+                .build();
     }
 }
