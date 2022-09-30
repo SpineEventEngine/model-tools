@@ -84,6 +84,7 @@ final class ModelVerifier implements Logging {
                              .check(classSet.elements());
     }
 
+    @SuppressWarnings("FloggerLogString") // Cannot make it compile-time constant here.
     private void reportNotFoundIfAny(ClassSet classSet) {
         var notFound = classSet.notFound();
         if (notFound.isEmpty()) {
