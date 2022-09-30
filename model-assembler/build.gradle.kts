@@ -30,5 +30,6 @@ val baseVersion: String by extra
 val coreJavaVersion: String by extra
 dependencies {
     implementation("io.spine:spine-server:$coreJavaVersion")
+    implementation("io.spine:spine-validate:$baseVersion")
     testImplementation("io.spine.tools:spine-testlib:$baseVersion")
 }

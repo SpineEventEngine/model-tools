@@ -62,6 +62,7 @@ buildscript {
         resolutionStrategy {
             force(
                 "io.spine:spine-base:$baseVersion",
+                "io.spine:spine-validate:$baseVersion",
                 "io.spine:spine-time:$timeVersion",
                 "io.spine:spine-server:$coreJavaVersion",
                 "io.spine.tools:spine-tool-base:$toolBaseVersion",
@@ -79,6 +80,7 @@ apply(from = "$rootDir/test-env.gradle")
 val enclosingRootDir: String by extra
 
 apply(from = "$enclosingRootDir/version.gradle.kts")
+val baseVersion: String by extra
 val baseTypesVersion: String by extra
 val coreJavaVersion: String by extra
 val toolBaseVersion: String by extra
@@ -103,6 +105,7 @@ tasks.compileJava {
 }
 
 dependencies {
+    implementation("io.spine:spine-validate:$baseVersion")
     implementation("io.spine:spine-server:$coreJavaVersion")
     implementation("io.spine:spine-base-types:$baseTypesVersion")
     annotationProcessor("io.spine.tools:spine-model-assembler:$versionToPublish")

@@ -71,7 +71,6 @@ buildscript {
                 "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
                 "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion",
                 "io.spine:spine-base:$baseVersion",
-                //"io.spine:spine-time:$timeVersion",
                 "io.spine.tools:spine-tool-base:$toolBaseVersion"
             )
         }
@@ -181,15 +180,6 @@ subprojects {
         testImplementation("io.spine.tools:spine-testlib:$baseVersion")
     }
 
-    /**
-     * Force Error Prone dependencies to `2.10.0`, because in `2.11.0` the empty constructor in
-     * [com.google.errorprone.bugpatterns.CheckReturnValue] was removed leading to breaking
-     * our code in `mc-java`.
-     *
-     * See [this issue](https://github.com/SpineEventEngine/mc-java/issues/42) for details.
-     */
-    val errorProneVersion = "2.10.0"
-
     configurations {
         forceVersions()
         excludeProtobufLite()
@@ -208,6 +198,7 @@ subprojects {
                     "io.grpc:protoc-gen-grpc-java:${Grpc.version}",
 
                     "io.spine:spine-base:$baseVersion",
+                    "io.spine:spine-validate:$baseVersion",
                     "io.spine:spine-time:$timeVersion",
                     "io.spine:spine-server:$coreJavaVersion",
                     "io.spine.tools:spine-testlib:$baseVersion",
@@ -282,7 +273,7 @@ subprojects {
                 )
             )
 
-            testSourceDirs.add(file(generatedTestJavaDir))
+            testSources.from(generatedTestJavaDir)
 
             isDownloadJavadoc = true
             isDownloadSources = true
@@ -290,8 +281,8 @@ subprojects {
     }
 
     /**
-     * Determines whether this project should expose its Javadoc to `SpineEventEngine.github.io`
-     * website.
+     * Determines whether this project should expose its Javadoc to
+     * `SpineEventEngine.github.io`website.
      *
      * Currently, the `testutil` projects are excluded from publishing, as well as the modules
      * that perform the model compile-time checks.
