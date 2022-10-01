@@ -37,7 +37,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  */
 fun KotlinJvmProjectExtension.applyJvmToolchain(version: Int) {
     jvmToolchain {
-        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(version))
+        languageVersion.set(JavaLanguageVersion.of(version))
     }
 }
 
