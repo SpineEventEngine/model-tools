@@ -30,6 +30,7 @@ import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.JUnit
 import io.spine.internal.gradle.publish.IncrementGuard
 import io.spine.internal.gradle.VersionWriter
+import io.spine.internal.gradle.applyGitHubPackages
 import io.spine.internal.gradle.applyStandard
 import io.spine.internal.gradle.checkstyle.CheckStyleConfig
 import io.spine.internal.gradle.excludeProtobufLite
@@ -54,6 +55,7 @@ buildscript {
 
     io.spine.internal.gradle.doApplyStandard(repositories)
     io.spine.internal.gradle.doApplyGitHubPackages(repositories, "base", rootProject)
+    io.spine.internal.gradle.doApplyGitHubPackages(repositories, "tool-base", rootProject)
 
     val kotlinVersion = io.spine.internal.dependency.Kotlin.version
     val baseVersion: String by extra
@@ -103,7 +105,7 @@ spinePublishing {
     destinations = with(PublishingRepos) {
         setOf(
             cloudRepo,
-            gitHub("core-java"),
+            gitHub("model-tools"),
             cloudArtifactRegistry
         )
     }
@@ -131,6 +133,12 @@ allprojects {
 subprojects {
 
     repositories.applyStandard()
+    repositories.applyGitHubPackages(project,
+        "base",
+        "core-java",
+        "tool-base",
+        "validation"
+    )
 
     apply {
         plugin("java-library")

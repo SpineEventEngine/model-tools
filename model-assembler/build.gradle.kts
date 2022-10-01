@@ -24,8 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-group = "io.spine.tools"
-
 val baseVersion: String by extra
 val coreJavaVersion: String by extra
 dependencies {

@@ -1,3 +1,5 @@
+import io.spine.internal.gradle.publish.IncrementGuard
+
 /*
  * Copyright 2022, TeamDev. All rights reserved.
  *
@@ -28,7 +30,7 @@ buildscript {
     apply(from = "$rootDir/version.gradle.kts")
 }
 
-group = "io.spine.tools"
+apply<IncrementGuard>()
 
 val coreJavaVersion: String by extra
 val toolBaseVersion: String by extra
