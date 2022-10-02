@@ -43,7 +43,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static io.spine.tools.mc.java.gradle.plugins.ModelVerifierTaskName.verifyModel;
+//import static io.spine.tools.mc.java.gradle.plugins.ModelVerifierTaskName.verifyModel;
+import static io.spine.model.verify.ModelVerifierTaskName.verifyModel;
 import static org.gradle.testkit.runner.TaskOutcome.FAILED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

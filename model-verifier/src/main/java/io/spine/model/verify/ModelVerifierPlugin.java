@@ -33,7 +33,6 @@ import io.spine.model.CommandReceivers;
 import io.spine.model.assemble.AssignLookup;
 import io.spine.tools.code.SourceSetName;
 import io.spine.tools.gradle.task.GradleTask;
-import io.spine.tools.mc.java.gradle.McJavaOptions;
 import io.spine.tools.type.MoreKnownTypes;
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
@@ -45,10 +44,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+import static io.spine.model.verify.ModelVerifierTaskName.verifyModel;
 import static io.spine.tools.gradle.project.Projects.descriptorSetFile;
 import static io.spine.tools.gradle.task.JavaTaskName.classes;
 import static io.spine.tools.gradle.task.JavaTaskName.compileJava;
-import static io.spine.tools.mc.java.gradle.plugins.ModelVerifierTaskName.verifyModel;
 import static java.nio.file.Files.exists;
 import static java.nio.file.Files.newInputStream;
 
@@ -99,6 +98,7 @@ public final class ModelVerifierPlugin implements Plugin<Project>, Logging {
      */
     private static class VerifierAction implements Action<Task>, Logging {
 
+        public static final String MC_JAVA_EXTENSION_NAME = "java";
         private final ModelVerifierPlugin parent;
         private final Path rawModelPath;
 
@@ -119,15 +119,14 @@ public final class ModelVerifierPlugin implements Plugin<Project>, Logging {
         }
 
         private void extendKnownTypes(Project project) {
-            var pluginExtensionName = McJavaOptions.name();
-            if (project.getExtensions().findByName(pluginExtensionName) != null) {
+            if (project.getExtensions().findByName(MC_JAVA_EXTENSION_NAME) != null) {
                 var descriptorFile = descriptorSetFile(project, SourceSetName.main);
                 tryExtend(descriptorFile);
             } else {
                 _warn().log(
                         "`%s` plugin extension is not found." +
                                 " Please apply the Spine model compiler plugin.",
-                        pluginExtensionName
+                        MC_JAVA_EXTENSION_NAME
                 );
             }
         }
