@@ -41,8 +41,6 @@ dependencies {
     implementation(gradleApi())
     implementation("io.spine:spine-server:$coreJavaVersion")
     implementation("io.spine.tools:spine-plugin-base:$toolBaseVersion")
-    implementation("io.spine.tools:spine-mc-java:$mcJavaVersion")
-    implementation("io.spine.tools:spine-mc-java-base:$mcJavaVersion")
 
     implementation(project(":model-assembler"))
 
