@@ -98,7 +98,9 @@ val toolBaseVersion: String by extra
 
 spinePublishing {
     modules = setOf(
+        "model-assembler",
         "model-check",
+        "model-check-bundle",
     )
 
     destinations = with(PublishingRepos) {

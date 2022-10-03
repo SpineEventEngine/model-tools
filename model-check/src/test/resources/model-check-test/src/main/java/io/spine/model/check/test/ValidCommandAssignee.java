@@ -24,28 +24,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.check;
+package io.spine.model.check.test;
 
+import io.spine.base.EventMessage;
+import io.spine.server.command.AbstractCommandAssignee;
 import io.spine.server.command.Assign;
-import io.spine.server.procman.ProcessManager;
 
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-/**
- * A {@code ProcessManager} with a valid command-handling method.
- */
-public class ValidProcMan extends ProcessManager<String, ValidProcess, ValidProcess.Builder> {
+import io.spine.model.check.test.command.*;
+import io.spine.model.check.test.event.*;
 
-    protected ValidProcMan(String id) {
-        super(id);
-    }
+/**
+ * A {@code CommandAssignee} with a valid command-handling method.
+ */
+public class ValidCommandAssignee extends AbstractCommandAssignee {
 
     @Assign
-    List<VideoCallStarted> handle(StartVideoCall command) {
-        return singletonList(VideoCallStarted.newBuilder()
-                                             .setIp(command.getIp())
-                                             .build());
+    List<? extends EventMessage> handle(SendLink command) {
+        return singletonList(LinkSent.newBuilder()
+                                     .setLink(command.getLink())
+                                     .build());
     }
 }

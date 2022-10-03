@@ -23,26 +23,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+syntax = "proto3";
 
-package io.spine.model.check;
+package spine.model.check.test;
 
-import io.spine.base.EventMessage;
-import io.spine.server.command.AbstractCommandAssignee;
-import io.spine.server.command.Assign;
+import "spine/options.proto";
 
-import java.util.List;
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.model.check.test.command";
+option java_outer_classname = "CommandsProto";
+option java_multiple_files = true;
 
-import static java.util.Collections.singletonList;
+import "spine/net/url.proto";
 
-/**
- * A {@code CommandAssignee} with a valid command-handling method.
- */
-public class ValidCommandAssignee extends AbstractCommandAssignee {
+message SendMessage {
+    string message = 1;
+}
 
-    @Assign
-    List<? extends EventMessage> handle(SendLink command) {
-        return singletonList(LinkSent.newBuilder()
-                                     .setLink(command.getLink())
-                                     .build());
-    }
+message StartVideoCall {
+    string ip = 1;
+}
+
+message SendLink {
+    spine.net.Url link = 1;
 }

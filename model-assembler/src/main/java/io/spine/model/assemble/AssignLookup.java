@@ -27,6 +27,7 @@
 package io.spine.model.assemble;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableSet;
 import io.spine.annotation.Internal;
 import io.spine.model.CommandReceivers;
 import io.spine.server.command.Assign;
@@ -41,7 +42,6 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.Sets.newTreeSet;
 import static io.spine.io.Ensure.ensureFile;
 import static io.spine.io.Files2.existsNonEmpty;
@@ -58,7 +58,7 @@ import static io.spine.protobuf.Messages.isDefault;
  * Use {@code javac -AspineDirRoot=/path/to/project/root [...]} to set the value of the option.
  * If none is set, the option will default to current directory (denoted with "{@code ./}").
  */
-public class AssignLookup extends SpineAnnotationProcessor {
+public class AssignLookup extends ModelAnnotationProcessor {
 
     @Internal
     public static final String DESTINATION_PATH = ".spine/spine_model.ser";
@@ -82,9 +82,10 @@ public class AssignLookup extends SpineAnnotationProcessor {
 
     @Override
     public Set<String> getSupportedOptions() {
-        Set<String> result = newHashSet(super.getSupportedOptions());
-        result.add(OUTPUT_OPTION_NAME);
-        return result;
+        var result = ImmutableSet.<String>builder()
+                .addAll(super.getSupportedOptions())
+                .add(OUTPUT_OPTION_NAME);
+        return result.build();
     }
 
     @SuppressWarnings("CheckReturnValue") // calling builder

@@ -33,10 +33,10 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("`AssignLookup` should")
-class AssignLookupTest extends SpineAnnotationProcessorTest {
+class AssignLookupTest extends ModelAnnotationProcessorTest {
 
     @Override
-    protected SpineAnnotationProcessor processor() {
+    protected ModelAnnotationProcessor processor() {
         return new AssignLookup();
     }
 

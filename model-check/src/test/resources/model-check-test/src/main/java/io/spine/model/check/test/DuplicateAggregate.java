@@ -23,48 +23,38 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-syntax = "proto3";
 
-package spine.model.verify;
+package io.spine.model.check.test;
 
-import "spine/options.proto";
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
 
-option (type_url_prefix) = "type.spine.io";
-option java_package = "io.spine.model.verify";
-option java_outer_classname = "CallEntityProto";
-option java_multiple_files = true;
+import io.spine.model.check.test.command.*;
+import io.spine.model.check.test.event.*;
 
-message CallState {
+import java.util.List;
 
-    option (entity).kind = AGGREGATE;
+import static java.util.Collections.singletonList;
 
-    string id = 1 [(required) = true];
-}
+public class DuplicateAggregate extends Aggregate<String, CallState, CallState.Builder> {
 
-message ChatState {
+    @Assign
+    MessageSent handle(SendMessage command) {
+        return MessageSent.newBuilder()
+                .setMessage(command.getMessage())
+                .build();
+    }
 
-    option (entity).kind = AGGREGATE;
+    @Assign
+    List<VideoCallStarted> on(StartVideoCall command) {
+        return singletonList(VideoCallStarted.newBuilder()
+                                     .setIp(command.getIp())
+                                     .build());
+    }
 
-    string id = 1 [(required) = true];
-}
-
-message VoidState {
-
-    option (entity).kind = AGGREGATE;
-
-    string id = 1 [(required) = true];
-}
-
-message ValidState {
-
-    option (entity).kind = AGGREGATE;
-
-    string id = 1 [(required) = true];
-}
-
-message ValidProcess {
-
-    option (entity).kind = PROCESS_MANAGER;
-
-    string id = 1 [(required) = true];
+    @Assign
+    VideoCallStarted oneMore(StartVideoCall cmd) {
+        // NoOp for test
+        return VideoCallStarted.getDefaultInstance();
+    }
 }

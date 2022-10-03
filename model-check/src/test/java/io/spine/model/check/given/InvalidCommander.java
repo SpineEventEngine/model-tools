@@ -27,11 +27,10 @@
 package io.spine.model.check.given;
 
 import io.spine.core.External;
+import io.spine.model.check.given.command.RestorePhoto;
+import io.spine.model.check.given.command.UploadPhoto;
 import io.spine.server.command.Command;
 import io.spine.server.procman.ProcessManager;
-import io.spine.test.model.verify.command.RestorePhoto;
-import io.spine.test.model.verify.command.UploadPhoto;
-import io.spine.test.model.verify.given.EditState;
 
 /**
  * A procman that declares an {@code external} command substitution method and thus shouldn't pass

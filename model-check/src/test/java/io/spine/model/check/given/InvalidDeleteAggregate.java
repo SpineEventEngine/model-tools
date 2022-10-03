@@ -25,11 +25,10 @@
  */
 package io.spine.model.check.given;
 
+import io.spine.model.check.given.command.DeletePhoto;
+import io.spine.model.check.given.event.PhotoDeleted;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.command.Assign;
-import io.spine.test.model.verify.command.DeletePhoto;
-import io.spine.test.model.verify.event.PhotoDeleted;
-import io.spine.test.model.verify.given.EditState;
 
 /**
  * This aggregate declares a command-handling method that breaks the contract imposed by
@@ -40,8 +39,7 @@ public class InvalidDeleteAggregate extends Aggregate<String, EditState, EditSta
 
     @Assign
     PhotoDeleted handle(String unnecessaryString, DeletePhoto delete) {
-        return PhotoDeleted
-                .newBuilder()
+        return PhotoDeleted.newBuilder()
                 .setTitle(delete.getTitle())
                 .build();
     }

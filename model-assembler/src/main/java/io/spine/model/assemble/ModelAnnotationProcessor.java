@@ -63,7 +63,7 @@ import static javax.tools.Diagnostic.Kind.WARNING;
  * to state the programming mistakes in the processor itself.
  */
 @SPI
-public abstract class SpineAnnotationProcessor extends AbstractProcessor {
+public abstract class ModelAnnotationProcessor extends AbstractProcessor {
 
     @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
         // Initialized in the synchronized `init` method.
@@ -121,10 +121,10 @@ public abstract class SpineAnnotationProcessor extends AbstractProcessor {
     }
 
     @Override
-    public final synchronized void init(ProcessingEnvironment processingEnv) {
-        super.init(processingEnv);
-        this.messager = processingEnv.getMessager();
-        this.options = ImmutableMap.copyOf(processingEnv.getOptions());
+    public final synchronized void init(ProcessingEnvironment pe) {
+        super.init(pe);
+        this.messager = pe.getMessager();
+        this.options = ImmutableMap.copyOf(pe.getOptions());
     }
 
     @Override

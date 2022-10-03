@@ -24,26 +24,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.check;
+package io.spine.model.check.test;
 
-import io.spine.base.EventMessage;
-import io.spine.server.aggregate.Aggregate;
+import io.spine.model.check.test.command.*;
+import io.spine.model.check.test.event.*;
 import io.spine.server.command.Assign;
+import io.spine.server.procman.ProcessManager;
 
-import java.util.Collections;
 import java.util.List;
 
-/**
- * An {@code Aggregate} with a valid command-handling method.
- */
-class ValidAggregate extends Aggregate<String, ValidState, ValidState.Builder> {
+import static java.util.Collections.singletonList;
 
-    public ValidAggregate(String id) {
+/**
+ * A {@code ProcessManager} with a valid command-handling method.
+ */
+public class ValidProcMan extends ProcessManager<String, ValidProcess, ValidProcess.Builder> {
+
+    protected ValidProcMan(String id) {
         super(id);
     }
 
     @Assign
-    List<? extends EventMessage> handle(SendMessage command) {
-        return Collections.emptyList();
+    List<VideoCallStarted> handle(StartVideoCall command) {
+        return singletonList(VideoCallStarted.newBuilder()
+                                             .setIp(command.getIp())
+                                             .build());
     }
 }

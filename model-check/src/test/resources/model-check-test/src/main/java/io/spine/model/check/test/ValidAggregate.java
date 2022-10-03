@@ -24,9 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.check;
+package io.spine.model.check.test;
 
-import com.google.protobuf.UInt64Value;
+import io.spine.base.EventMessage;
+import io.spine.model.check.test.command.*;
+import io.spine.model.check.test.event.*;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.command.Assign;
 
@@ -34,19 +36,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * An {@code Aggregate} with an invalid command-handling method.
- *
- * <p>{@link #handle()} has no arguments but is marked with {@link Assign @Assign} annotation,
- * which makes the aggrerate invalid.
+ * An {@code Aggregate} with a valid command-handling method.
  */
-public class MalformedAggregate extends Aggregate<String, VoidState, VoidState.Builder> {
+class ValidAggregate extends Aggregate<String, ValidState, ValidState.Builder> {
 
-    protected MalformedAggregate(String id) {
+    public ValidAggregate(String id) {
         super(id);
     }
 
     @Assign
-    List<UInt64Value> handle() {
+    List<? extends EventMessage> handle(SendMessage command) {
         return Collections.emptyList();
     }
 }

@@ -24,26 +24,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.check;
+package io.spine.model.check.test;
 
+import com.google.protobuf.UInt64Value;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.command.Assign;
 
-import static java.util.Collections.singletonList;
+import java.util.Collections;
+import java.util.List;
 
-public class DuplicateCommandAssignee extends Aggregate<String, ChatState, ChatState.Builder> {
+import io.spine.model.check.test.command.*;
+import io.spine.model.check.test.event.*;
 
-    @Assign
-    Iterable<LinkSent> handle(SendLink command) {
-        return singletonList(LinkSent.newBuilder()
-                                     .setLink(command.getLink())
-                                     .build());
+/**
+ * An {@code Aggregate} with an invalid command-handling method.
+ *
+ * <p>{@link #handle()} has no arguments but is marked with {@link Assign @Assign} annotation,
+ * which makes the aggrerate invalid.
+ */
+public class MalformedAggregate extends Aggregate<String, VoidState, VoidState.Builder> {
+
+    protected MalformedAggregate(String id) {
+        super(id);
     }
 
     @Assign
-    MessageSent onCommandAny(SendMessage command) {
-        return MessageSent.newBuilder()
-                          .setMessage(command.getMessage())
-                          .build();
+    List<UInt64Value> handle() {
+        return Collections.emptyList();
     }
 }

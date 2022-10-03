@@ -23,38 +23,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-syntax = "proto3";
 
-package spine.test.model.verify;
+package io.spine.model.check.test;
 
-import "spine/options.proto";
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
 
-option (type_url_prefix) = "type.spine.io";
-option java_package = "io.spine.test.model.verify.command";
-option java_outer_classname = "CommandsProto";
-option java_multiple_files = true;
+import io.spine.model.check.test.command.*;
+import io.spine.model.check.test.event.*;
 
-message UploadPhoto {
-    bytes photo = 1;
-    string title = 2;
-}
+import static java.util.Collections.singletonList;
 
-message EditPhoto {
-    bytes new_photo = 1;
-}
+public class DuplicateCommandAssignee extends Aggregate<String, ChatState, ChatState.Builder> {
 
-message ChangeTitle {
-    string new_title = 1;
-}
+    @Assign
+    Iterable<LinkSent> handle(SendLink command) {
+        return singletonList(LinkSent.newBuilder()
+                                     .setLink(command.getLink())
+                                     .build());
+    }
 
-message DeletePhoto {
-    string title = 1;
-}
-
-message RestorePhoto {
-    string title = 1;
-}
-
-message EnhancePhoto {
-    string title = 1;
+    @Assign
+    MessageSent onCommandAny(SendMessage command) {
+        return MessageSent.newBuilder()
+                .setMessage(command.getMessage())
+                .build();
+    }
 }

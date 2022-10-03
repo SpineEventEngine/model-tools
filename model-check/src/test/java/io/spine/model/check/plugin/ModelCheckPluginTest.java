@@ -39,11 +39,10 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-//import static io.spine.tools.mc.java.gradle.plugins.ModelVerifierTaskName.verifyModel;
 import static io.spine.model.check.plugin.ModelCheckTaskName.verifyModel;
 import static org.gradle.testkit.runner.TaskOutcome.FAILED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,8 +53,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class ModelCheckPluginTest {
 
     private static final String PROJECT_NAME = "model-check-test";
-    private static final String VALID_AGGREGATE_JAVA =
-            "io/spine/model/check/ValidAggregate.java";
+    private static final String JAVA_PACKAGE = "io/spine/model/check/test/";
+    private static final String VALID_AGGREGATE_JAVA = JAVA_PACKAGE + "ValidAggregate.java";
 
     @TempDir
     @SuppressWarnings("PackageVisibleField") // must be non-private for JUnit's annotation to work.
@@ -70,8 +69,8 @@ class ModelCheckPluginTest {
     @DisplayName("pass valid model classes")
     void passValidModelClasses() {
         newProjectWithJava(VALID_AGGREGATE_JAVA,
-                           "io/spine/model/check/ValidProcMan.java",
-                           "io/spine/model/check/ValidCommandHandler.java")
+                           "ValidProcMan.java",
+                           "ValidCommandHandler.java")
                 .executeTask(verifyModel);
     }
 
@@ -80,8 +79,8 @@ class ModelCheckPluginTest {
     @DisplayName("halt build on duplicate command-handling methods")
     void rejectDuplicateHandlingMethods() {
         var project = newProjectWithJava(
-                "io/spine/model/check/DuplicateAggregate.java",
-                "io/spine/model/check/DuplicateCommandAssignee.java"
+                "DuplicateAggregate.java",
+                "DuplicateCommandAssignee.java"
         );
         var result = project.executeAndFail(verifyModel);
         var task = result.task(verifyModel.path());
@@ -101,7 +100,7 @@ class ModelCheckPluginTest {
     @Test
     @DisplayName("halt build on malformed command-handling methods")
     void rejectMalformedHandlingMethods() {
-        var result = newProjectWithJava("io/spine/model/check/MalformedAggregate.java")
+        var result = newProjectWithJava("MalformedAggregate.java")
                 .executeAndFail(verifyModel);
         var task = result.task(verifyModel.path());
         assertNotNull(task, result.getOutput());
@@ -110,18 +109,22 @@ class ModelCheckPluginTest {
     }
 
     private GradleProject newProjectWithJava(String... fileNames) {
-        var filesWithBuild = new ArrayList<>(Arrays.asList(fileNames));
-        filesWithBuild.add("build.gradle.kts");
-        var javaFiles = filesWithBuild.stream()
+        var fullNames = Arrays.stream(fileNames)
+                .map(n -> JAVA_PACKAGE + n)
+                .collect(Collectors.toList());
+        fullNames.add("build.gradle.kts");
+        var filesWithBuild = fullNames;
+        var filesToBuild = filesWithBuild.stream()
                 .map(Paths::get)
                 .collect(toImmutableList());
         Function1<Path, Boolean> matching = path -> {
-            var isWantedJavaFile = javaFiles.stream().anyMatch(path::endsWith);
+            var isWantedJavaFile = filesToBuild.stream().anyMatch(path::endsWith);
             return isWantedJavaFile || path.toString().endsWith(".proto");
         };
         return GradleProject.setupAt(tempDir)
                 .fromResources(PROJECT_NAME, matching)
                 .copyBuildSrc()
+                .enableRunnerDebug()
                 .create();
     }
 }

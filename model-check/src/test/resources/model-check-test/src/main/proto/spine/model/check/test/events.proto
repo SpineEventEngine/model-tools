@@ -25,12 +25,12 @@
  */
 syntax = "proto3";
 
-package spine.model.verify;
+package spine.model.check.test;
 
 import "spine/options.proto";
 
 option (type_url_prefix) = "type.spine.io";
-option java_package = "io.spine.model.verify";
+option java_package = "io.spine.model.check.test.event";
 option java_outer_classname = "EventsProto";
 option java_multiple_files = true;
 

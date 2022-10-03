@@ -27,19 +27,17 @@
 package io.spine.model.check.given;
 
 import io.spine.core.CommandContext;
+import io.spine.model.check.given.command.EditPhoto;
+import io.spine.model.check.given.event.PhotoEdited;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.aggregate.Apply;
 import io.spine.server.command.Assign;
-import io.spine.test.model.verify.command.EditPhoto;
-import io.spine.test.model.verify.event.PhotoEdited;
-import io.spine.test.model.verify.given.EditState;
 
 public class EditAggregate extends Aggregate<String, EditState, EditState.Builder> {
 
     @Assign
     PhotoEdited handle(EditPhoto command, CommandContext ctx) {
-        return PhotoEdited
-                .newBuilder()
+        return PhotoEdited.newBuilder()
                 .setNewPhoto(command.getNewPhoto())
                 .setEditor(ctx.actor().getValue())
                 .build();

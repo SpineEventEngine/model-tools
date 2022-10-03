@@ -23,35 +23,39 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+syntax = "proto3";
 
-package io.spine.model.check;
+package spine.model.check.given;
 
-import io.spine.server.aggregate.Aggregate;
-import io.spine.server.command.Assign;
+import "spine/options.proto";
 
-import java.util.List;
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.model.check.given.event";
+option java_outer_classname = "EventsProto";
+option java_multiple_files = true;
 
-import static java.util.Collections.singletonList;
+message PhotoUploaded {
+    bytes photo = 1;
+    string title = 2;
+}
 
-public class DuplicateAggregate extends Aggregate<String, CallState, CallState.Builder> {
+message PhotoEdited {
+    bytes new_photo = 1;
+    string editor = 2;
+}
 
-    @Assign
-    MessageSent handle(SendMessage command) {
-        return MessageSent.newBuilder()
-                          .setMessage(command.getMessage())
-                          .build();
-    }
+message TitleChanged {
+    string new_title = 1;
+}
 
-    @Assign
-    List<VideoCallStarted> on(StartVideoCall command) {
-        return singletonList(VideoCallStarted.newBuilder()
-                                             .setIp(command.getIp())
-                                             .build());
-    }
+message PhotoDeleted {
+    string title = 1;
+}
 
-    @Assign
-    VideoCallStarted oneMore(StartVideoCall cmd) {
-        // NoOp for test
-        return VideoCallStarted.getDefaultInstance();
-    }
+message PhotoEnhanced {
+    string title = 1;
+}
+
+message PhotoRestored {
+    string title = 1;
 }

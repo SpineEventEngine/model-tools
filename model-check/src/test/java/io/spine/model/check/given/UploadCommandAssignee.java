@@ -26,17 +26,16 @@
 
 package io.spine.model.check.given;
 
+import io.spine.model.check.given.command.UploadPhoto;
+import io.spine.model.check.given.event.PhotoUploaded;
 import io.spine.server.command.AbstractCommandAssignee;
 import io.spine.server.command.Assign;
-import io.spine.test.model.verify.command.UploadPhoto;
-import io.spine.test.model.verify.event.PhotoUploaded;
 
 public class UploadCommandAssignee extends AbstractCommandAssignee {
 
     @Assign
     PhotoUploaded handle(UploadPhoto command) {
-        return PhotoUploaded
-                .newBuilder()
+        return PhotoUploaded.newBuilder()
                 .setPhoto(command.getPhoto())
                 .build();
     }

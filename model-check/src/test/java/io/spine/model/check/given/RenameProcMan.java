@@ -27,12 +27,11 @@
 package io.spine.model.check.given;
 
 import io.spine.core.EventContext;
+import io.spine.model.check.given.command.ChangeTitle;
+import io.spine.model.check.given.event.TitleChanged;
 import io.spine.server.aggregate.Apply;
 import io.spine.server.command.Assign;
 import io.spine.server.procman.ProcessManager;
-import io.spine.test.model.verify.command.ChangeTitle;
-import io.spine.test.model.verify.event.TitleChanged;
-import io.spine.test.model.verify.given.RenameState;
 
 public class RenameProcMan extends ProcessManager<String, RenameState, RenameState.Builder> {
 
@@ -42,8 +41,7 @@ public class RenameProcMan extends ProcessManager<String, RenameState, RenameSta
 
     @Assign
     TitleChanged handle(ChangeTitle command) {
-        return TitleChanged
-                .newBuilder()
+        return TitleChanged.newBuilder()
                 .setNewTitle(command.getNewTitle())
                 .build();
     }

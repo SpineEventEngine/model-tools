@@ -26,11 +26,10 @@
 
 package io.spine.model.check.given;
 
+import io.spine.model.check.given.command.RestorePhoto;
+import io.spine.model.check.given.event.PhotoRestored;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.command.Assign;
-import io.spine.test.model.verify.command.RestorePhoto;
-import io.spine.test.model.verify.event.PhotoRestored;
-import io.spine.test.model.verify.given.EditState;
 
 /**
  * This aggregate declares a command-handling method that breaks the contract imposed by

@@ -40,11 +40,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("`SpineAnnotationProcessor` should")
-abstract class SpineAnnotationProcessorTest {
+abstract class ModelAnnotationProcessorTest {
 
-    private SpineAnnotationProcessor processor;
+    private ModelAnnotationProcessor processor;
 
-    protected abstract SpineAnnotationProcessor processor();
+    protected abstract ModelAnnotationProcessor processor();
 
     @BeforeEach
     void setUp() {

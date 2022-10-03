@@ -25,25 +25,36 @@
  */
 syntax = "proto3";
 
-package spine.model.verify;
+package spine.model.check.given;
 
 import "spine/options.proto";
 
 option (type_url_prefix) = "type.spine.io";
-option java_package = "io.spine.model.verify";
+option java_package = "io.spine.model.check.given.command";
 option java_outer_classname = "CommandsProto";
 option java_multiple_files = true;
 
-import "spine/net/url.proto";
-
-message SendMessage {
-    string message = 1;
+message UploadPhoto {
+    bytes photo = 1;
+    string title = 2;
 }
 
-message StartVideoCall {
-    string ip = 1;
+message EditPhoto {
+    bytes new_photo = 1;
 }
 
-message SendLink {
-    spine.net.Url link = 1;
+message ChangeTitle {
+    string new_title = 1;
+}
+
+message DeletePhoto {
+    string title = 1;
+}
+
+message RestorePhoto {
+    string title = 1;
+}
+
+message EnhancePhoto {
+    string title = 1;
 }

@@ -25,37 +25,46 @@
  */
 syntax = "proto3";
 
-package spine.test.model.verify;
+package spine.model.check.test;
 
 import "spine/options.proto";
 
 option (type_url_prefix) = "type.spine.io";
-option java_package = "io.spine.test.model.verify.event";
-option java_outer_classname = "EventsProto";
+option java_package = "io.spine.model.check.test";
+option java_outer_classname = "CallEntityProto";
 option java_multiple_files = true;
 
-message PhotoUploaded {
-    bytes photo = 1;
-    string title = 2;
+message CallState {
+
+    option (entity).kind = AGGREGATE;
+
+    string id = 1 [(required) = true];
 }
 
-message PhotoEdited {
-    bytes new_photo = 1;
-    string editor = 2;
+message ChatState {
+
+    option (entity).kind = AGGREGATE;
+
+    string id = 1 [(required) = true];
 }
 
-message TitleChanged {
-    string new_title = 1;
+message VoidState {
+
+    option (entity).kind = AGGREGATE;
+
+    string id = 1 [(required) = true];
 }
 
-message PhotoDeleted {
-    string title = 1;
+message ValidState {
+
+    option (entity).kind = AGGREGATE;
+
+    string id = 1 [(required) = true];
 }
 
-message PhotoEnhanced {
-    string title = 1;
-}
+message ValidProcess {
 
-message PhotoRestored {
-    string title = 1;
+    option (entity).kind = PROCESS_MANAGER;
+
+    string id = 1 [(required) = true];
 }
