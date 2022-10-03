@@ -24,16 +24,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
+package io.spine.model.check;
+
+import io.spine.base.EventMessage;
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
+
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * An {@code Aggregate} with a valid command-handling method.
+ */
+class ValidAggregate extends Aggregate<String, ValidState, ValidState.Builder> {
+
+    public ValidAggregate(String id) {
+        super(id);
+    }
+
+    @Assign
+    List<? extends EventMessage> handle(SendMessage command) {
+        return Collections.emptyList();
     }
 }
-
-rootProject.name = "spine-model-tools"
-
-include(
-    "model-assembler",
-    "model-check",
-)

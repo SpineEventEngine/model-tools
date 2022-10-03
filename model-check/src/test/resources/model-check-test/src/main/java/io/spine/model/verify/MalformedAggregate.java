@@ -24,16 +24,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
+package io.spine.model.check;
+
+import com.google.protobuf.UInt64Value;
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
+
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * An {@code Aggregate} with an invalid command-handling method.
+ *
+ * <p>{@link #handle()} has no arguments but is marked with {@link Assign @Assign} annotation,
+ * which makes the aggrerate invalid.
+ */
+public class MalformedAggregate extends Aggregate<String, VoidState, VoidState.Builder> {
+
+    protected MalformedAggregate(String id) {
+        super(id);
+    }
+
+    @Assign
+    List<UInt64Value> handle() {
+        return Collections.emptyList();
     }
 }
-
-rootProject.name = "spine-model-tools"
-
-include(
-    "model-assembler",
-    "model-check",
-)

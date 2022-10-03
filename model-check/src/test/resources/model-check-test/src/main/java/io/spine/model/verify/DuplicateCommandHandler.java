@@ -24,16 +24,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
+package io.spine.model.check;
+
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
+
+import static java.util.Collections.singletonList;
+
+public class DuplicateCommandAssignee extends Aggregate<String, ChatState, ChatState.Builder> {
+
+    @Assign
+    Iterable<LinkSent> handle(SendLink command) {
+        return singletonList(LinkSent.newBuilder()
+                                     .setLink(command.getLink())
+                                     .build());
+    }
+
+    @Assign
+    MessageSent onCommandAny(SendMessage command) {
+        return MessageSent.newBuilder()
+                          .setMessage(command.getMessage())
+                          .build();
     }
 }
-
-rootProject.name = "spine-model-tools"
-
-include(
-    "model-assembler",
-    "model-check",
-)

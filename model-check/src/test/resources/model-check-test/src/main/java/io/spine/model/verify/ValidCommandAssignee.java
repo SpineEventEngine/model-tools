@@ -24,16 +24,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
+package io.spine.model.check;
+
+import io.spine.base.EventMessage;
+import io.spine.server.command.AbstractCommandAssignee;
+import io.spine.server.command.Assign;
+
+import java.util.List;
+
+import static java.util.Collections.singletonList;
+
+/**
+ * A {@code CommandAssignee} with a valid command-handling method.
+ */
+public class ValidCommandAssignee extends AbstractCommandAssignee {
+
+    @Assign
+    List<? extends EventMessage> handle(SendLink command) {
+        return singletonList(LinkSent.newBuilder()
+                                     .setLink(command.getLink())
+                                     .build());
     }
 }
-
-rootProject.name = "spine-model-tools"
-
-include(
-    "model-assembler",
-    "model-check",
-)

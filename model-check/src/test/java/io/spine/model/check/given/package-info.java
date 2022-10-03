@@ -24,16 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
+/**
+ * Test environment for the {@link io.spine.model.check} package.
+ */
 
-rootProject.name = "spine-model-tools"
+@CheckReturnValue
+@ParametersAreNonnullByDefault
+package io.spine.model.check.given;
 
-include(
-    "model-assembler",
-    "model-check",
-)
+import com.google.errorprone.annotations.CheckReturnValue;
+
+import javax.annotation.ParametersAreNonnullByDefault;

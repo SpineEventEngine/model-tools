@@ -24,16 +24,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
+package io.spine.model.check.given;
+
+import io.spine.core.CommandContext;
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.aggregate.Apply;
+import io.spine.server.command.Assign;
+import io.spine.test.model.verify.command.EditPhoto;
+import io.spine.test.model.verify.event.PhotoEdited;
+import io.spine.test.model.verify.given.EditState;
+
+public class EditAggregate extends Aggregate<String, EditState, EditState.Builder> {
+
+    @Assign
+    PhotoEdited handle(EditPhoto command, CommandContext ctx) {
+        return PhotoEdited
+                .newBuilder()
+                .setNewPhoto(command.getNewPhoto())
+                .setEditor(ctx.actor().getValue())
+                .build();
+    }
+
+    @Apply
+    private void on(PhotoEdited event) {
+        builder().setEditor(event.getEditor());
     }
 }
-
-rootProject.name = "spine-model-tools"
-
-include(
-    "model-assembler",
-    "model-check",
-)

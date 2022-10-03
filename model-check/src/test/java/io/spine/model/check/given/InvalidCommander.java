@@ -24,16 +24,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
+package io.spine.model.check.given;
+
+import io.spine.core.External;
+import io.spine.server.command.Command;
+import io.spine.server.procman.ProcessManager;
+import io.spine.test.model.verify.command.RestorePhoto;
+import io.spine.test.model.verify.command.UploadPhoto;
+import io.spine.test.model.verify.given.EditState;
+
+/**
+ * A procman that declares an {@code external} command substitution method and thus shouldn't pass
+ * the model verification.
+ */
+public class InvalidCommander extends ProcessManager<String, EditState, EditState.Builder> {
+
+    protected InvalidCommander(String id) {
+        super(id);
+    }
+
+    @Command
+    UploadPhoto handle(@External RestorePhoto command) {
+        return UploadPhoto.getDefaultInstance();
     }
 }
-
-rootProject.name = "spine-model-tools"
-
-include(
-    "model-assembler",
-    "model-check",
-)

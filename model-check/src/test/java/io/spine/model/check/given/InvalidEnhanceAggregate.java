@@ -24,16 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
+package io.spine.model.check.given;
+
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
+import io.spine.test.model.verify.command.EnhancePhoto;
+import io.spine.test.model.verify.given.EditState;
+
+/**
+ * This aggregate declares a command-handling method that breaks the contract imposed by
+ * {@link Assign}, by having a return value that cannot be derived from
+ * {@link io.spine.base.EventMessage}.
+ */
+public class InvalidEnhanceAggregate extends Aggregate<String, EditState, EditState.Builder> {
+
+    @Assign
+    String handle(EnhancePhoto delete) {
+        return delete.getTitle();
     }
 }
-
-rootProject.name = "spine-model-tools"
-
-include(
-    "model-assembler",
-    "model-check",
-)

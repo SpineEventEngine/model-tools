@@ -24,16 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
+/**
+ * Utilities for verification of Spine project model.
+ */
+@CheckReturnValue
+@ParametersAreNonnullByDefault
+package io.spine.model.check;
 
-rootProject.name = "spine-model-tools"
+import com.google.errorprone.annotations.CheckReturnValue;
 
-include(
-    "model-assembler",
-    "model-check",
-)
+import javax.annotation.ParametersAreNonnullByDefault;

@@ -24,16 +24,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
+package io.spine.model.check;
+
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
+
+import java.util.List;
+
+import static java.util.Collections.singletonList;
+
+public class DuplicateAggregate extends Aggregate<String, CallState, CallState.Builder> {
+
+    @Assign
+    MessageSent handle(SendMessage command) {
+        return MessageSent.newBuilder()
+                          .setMessage(command.getMessage())
+                          .build();
+    }
+
+    @Assign
+    List<VideoCallStarted> on(StartVideoCall command) {
+        return singletonList(VideoCallStarted.newBuilder()
+                                             .setIp(command.getIp())
+                                             .build());
+    }
+
+    @Assign
+    VideoCallStarted oneMore(StartVideoCall cmd) {
+        // NoOp for test
+        return VideoCallStarted.getDefaultInstance();
     }
 }
-
-rootProject.name = "spine-model-tools"
-
-include(
-    "model-assembler",
-    "model-check",
-)

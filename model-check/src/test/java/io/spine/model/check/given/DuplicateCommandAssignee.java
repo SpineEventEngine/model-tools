@@ -24,16 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
+package io.spine.model.check.given;
+
+import io.spine.server.command.AbstractCommandAssignee;
+import io.spine.server.command.Assign;
+import io.spine.test.model.verify.command.UploadPhoto;
+import io.spine.test.model.verify.event.PhotoUploaded;
+
+public class DuplicateCommandAssignee extends AbstractCommandAssignee {
+
+    @Assign
+    PhotoUploaded handle(UploadPhoto command) {
+        return PhotoUploaded
+                .newBuilder()
+                .setPhoto(command.getPhoto())
+                .build();
     }
 }
-
-rootProject.name = "spine-model-tools"
-
-include(
-    "model-assembler",
-    "model-check",
-)

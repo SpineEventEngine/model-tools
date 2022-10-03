@@ -23,17 +23,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.model.check.given;
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
+import io.spine.test.model.verify.command.DeletePhoto;
+import io.spine.test.model.verify.event.PhotoDeleted;
+import io.spine.test.model.verify.given.EditState;
+
+/**
+ * This aggregate declares a command-handling method that breaks the contract imposed by
+ * {@link Assign}, by accepting a first parameter of type that cannot be derived from
+ * {@link io.spine.base.CommandMessage}.
+ */
+public class InvalidDeleteAggregate extends Aggregate<String, EditState, EditState.Builder> {
+
+    @Assign
+    PhotoDeleted handle(String unnecessaryString, DeletePhoto delete) {
+        return PhotoDeleted
+                .newBuilder()
+                .setTitle(delete.getTitle())
+                .build();
     }
 }
-
-rootProject.name = "spine-model-tools"
-
-include(
-    "model-assembler",
-    "model-check",
-)

@@ -24,16 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
+package io.spine.model.check.plugin;
+
+import io.spine.tools.gradle.task.TaskName;
+
+public enum ModelCheckTaskName implements TaskName {
+
+    /**
+     * Verifies correctness of the domain model definition.
+     */
+    verifyModel
 }
-
-rootProject.name = "spine-model-tools"
-
-include(
-    "model-assembler",
-    "model-check",
-)
