@@ -43,7 +43,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static io.spine.model.check.plugin.ModelCheckTaskName.verifyModel;
+import static io.spine.model.check.plugin.ModelCheckTaskName.checkModel;
 import static org.gradle.testkit.runner.TaskOutcome.FAILED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -71,7 +71,7 @@ class ModelCheckPluginTest {
         newProjectWithJava(VALID_AGGREGATE_JAVA,
                            "ValidProcMan.java",
                            "ValidCommandHandler.java")
-                .executeTask(verifyModel);
+                .executeTask(checkModel);
     }
 
     @Test
@@ -82,8 +82,8 @@ class ModelCheckPluginTest {
                 "DuplicateAggregate.java",
                 "DuplicateCommandAssignee.java"
         );
-        var result = project.executeAndFail(verifyModel);
-        var task = result.task(verifyModel.path());
+        var result = project.executeAndFail(checkModel);
+        var task = result.task(checkModel.path());
         assertNotNull(task, result.getOutput());
         var generationResult = task.getOutcome();
         assertEquals(FAILED, generationResult, result.getOutput());
@@ -93,16 +93,16 @@ class ModelCheckPluginTest {
     @DisplayName("ignore duplicate entries in a Gradle project")
     void ignoreDuplicateEntries() {
         var project = newProjectWithJava(VALID_AGGREGATE_JAVA);
-        project.executeTask(verifyModel);
-        project.executeTask(verifyModel);
+        project.executeTask(checkModel);
+        project.executeTask(checkModel);
     }
 
     @Test
     @DisplayName("halt build on malformed command-handling methods")
     void rejectMalformedHandlingMethods() {
         var result = newProjectWithJava("MalformedAggregate.java")
-                .executeAndFail(verifyModel);
-        var task = result.task(verifyModel.path());
+                .executeAndFail(checkModel);
+        var task = result.task(checkModel.path());
         assertNotNull(task, result.getOutput());
         var generationResult = task.getOutcome();
         assertEquals(FAILED, generationResult, result.getOutput());

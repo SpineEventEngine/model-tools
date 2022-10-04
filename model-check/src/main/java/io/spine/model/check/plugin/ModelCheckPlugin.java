@@ -45,7 +45,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import static io.spine.model.check.plugin.ModelCheckTaskName.verifyModel;
+import static io.spine.model.check.plugin.ModelCheckTaskName.checkModel;
 import static io.spine.tools.gradle.project.Projects.descriptorSetFile;
 import static io.spine.tools.gradle.task.JavaTaskName.classes;
 import static io.spine.tools.gradle.task.JavaTaskName.compileJava;
@@ -72,8 +72,8 @@ public final class ModelCheckPlugin implements Plugin<Project>, Logging {
     }
 
     private void createTask(Path rawModelStorage, Project project) {
-        _debug().log("Adding task `%s`.", verifyModel);
-        GradleTask.newBuilder(verifyModel, action(rawModelStorage))
+        _debug().log("Adding task `%s`.", checkModel);
+        GradleTask.newBuilder(checkModel, action(rawModelStorage))
                 .insertAfterTask(compileJava)
                 .insertBeforeTask(classes)
                 .applyNowTo(project);

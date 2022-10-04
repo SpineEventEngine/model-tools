@@ -28,10 +28,13 @@ package io.spine.model.check.plugin;
 
 import io.spine.tools.gradle.task.TaskName;
 
+/**
+ * The names of the tasks introduced by the Model Check plugin.
+ */
 public enum ModelCheckTaskName implements TaskName {
 
     /**
      * Verifies correctness of the domain model definition.
      */
-    verifyModel
+    checkModel
 }
