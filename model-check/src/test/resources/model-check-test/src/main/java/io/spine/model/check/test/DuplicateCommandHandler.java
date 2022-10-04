@@ -24,28 +24,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.assemble;
+package io.spine.model.check.test;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import io.spine.model.check.test.command.*;
+import io.spine.model.check.test.event.*;
 
-@DisplayName("`AssignLookup` should")
-class AssignLookupTest extends ModelAnnotationProcessorTest {
+import static java.util.Collections.singletonList;
 
-    @Override
-    protected ModelAnnotationProcessor processor() {
-        return new AssignLookup();
+public class DuplicateCommandAssignee extends Aggregate<String, ChatState, ChatState.Builder> {
+
+    @Assign
+    Iterable<LinkSent> handle(SendLink command) {
+        return singletonList(LinkSent.newBuilder()
+                                     .setLink(command.getLink())
+                                     .build());
     }
 
-    @Test
-    @DisplayName("support `spineDirRoot` option")
-    void supportSpineDirRoot() {
-        var opts = processor().getSupportedOptions();
-        assertEquals(1, opts.size());
-
-        assertThat(opts).contains(AssignLookup.OUTPUT_OPTION_NAME);
+    @Assign
+    MessageSent onCommandAny(SendMessage command) {
+        return MessageSent.newBuilder()
+                .setMessage(command.getMessage())
+                .build();
     }
 }

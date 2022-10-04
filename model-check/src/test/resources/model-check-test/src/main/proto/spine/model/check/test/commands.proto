@@ -23,29 +23,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+syntax = "proto3";
 
-package io.spine.model.assemble;
+package spine.model.check.test;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import "spine/options.proto";
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.model.check.test.command";
+option java_outer_classname = "CommandsProto";
+option java_multiple_files = true;
 
-@DisplayName("`AssignLookup` should")
-class AssignLookupTest extends ModelAnnotationProcessorTest {
+import "spine/net/url.proto";
 
-    @Override
-    protected ModelAnnotationProcessor processor() {
-        return new AssignLookup();
-    }
+message SendMessage {
+    string message = 1;
+}
 
-    @Test
-    @DisplayName("support `spineDirRoot` option")
-    void supportSpineDirRoot() {
-        var opts = processor().getSupportedOptions();
-        assertEquals(1, opts.size());
+message StartVideoCall {
+    string ip = 1;
+}
 
-        assertThat(opts).contains(AssignLookup.OUTPUT_OPTION_NAME);
-    }
+message SendLink {
+    spine.net.Url link = 1;
 }

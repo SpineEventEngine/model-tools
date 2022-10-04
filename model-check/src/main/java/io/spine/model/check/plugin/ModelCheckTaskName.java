@@ -24,28 +24,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.assemble;
+package io.spine.model.check.plugin;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.spine.tools.gradle.task.TaskName;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+/**
+ * The names of the tasks introduced by the Model Check plugin.
+ */
+public enum ModelCheckTaskName implements TaskName {
 
-@DisplayName("`AssignLookup` should")
-class AssignLookupTest extends ModelAnnotationProcessorTest {
-
-    @Override
-    protected ModelAnnotationProcessor processor() {
-        return new AssignLookup();
-    }
-
-    @Test
-    @DisplayName("support `spineDirRoot` option")
-    void supportSpineDirRoot() {
-        var opts = processor().getSupportedOptions();
-        assertEquals(1, opts.size());
-
-        assertThat(opts).contains(AssignLookup.OUTPUT_OPTION_NAME);
-    }
+    /**
+     * Verifies correctness of the domain model definition.
+     */
+    checkModel
 }

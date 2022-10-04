@@ -24,28 +24,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.assemble;
+package io.spine.model.check.test;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.google.protobuf.UInt64Value;
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Collections;
+import java.util.List;
 
-@DisplayName("`AssignLookup` should")
-class AssignLookupTest extends ModelAnnotationProcessorTest {
+import io.spine.model.check.test.command.*;
+import io.spine.model.check.test.event.*;
 
-    @Override
-    protected ModelAnnotationProcessor processor() {
-        return new AssignLookup();
+/**
+ * An {@code Aggregate} with an invalid command-handling method.
+ *
+ * <p>{@link #handle()} has no arguments but is marked with {@link Assign @Assign} annotation,
+ * which makes the aggrerate invalid.
+ */
+public class MalformedAggregate extends Aggregate<String, VoidState, VoidState.Builder> {
+
+    protected MalformedAggregate(String id) {
+        super(id);
     }
 
-    @Test
-    @DisplayName("support `spineDirRoot` option")
-    void supportSpineDirRoot() {
-        var opts = processor().getSupportedOptions();
-        assertEquals(1, opts.size());
-
-        assertThat(opts).contains(AssignLookup.OUTPUT_OPTION_NAME);
+    @Assign
+    List<UInt64Value> handle() {
+        return Collections.emptyList();
     }
 }

@@ -24,28 +24,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.assemble;
+package io.spine.model.check.given;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.spine.model.check.given.command.UploadPhoto;
+import io.spine.model.check.given.event.PhotoUploaded;
+import io.spine.server.command.AbstractCommandAssignee;
+import io.spine.server.command.Assign;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+public class DuplicateCommandAssignee extends AbstractCommandAssignee {
 
-@DisplayName("`AssignLookup` should")
-class AssignLookupTest extends ModelAnnotationProcessorTest {
-
-    @Override
-    protected ModelAnnotationProcessor processor() {
-        return new AssignLookup();
-    }
-
-    @Test
-    @DisplayName("support `spineDirRoot` option")
-    void supportSpineDirRoot() {
-        var opts = processor().getSupportedOptions();
-        assertEquals(1, opts.size());
-
-        assertThat(opts).contains(AssignLookup.OUTPUT_OPTION_NAME);
+    @Assign
+    PhotoUploaded handle(UploadPhoto command) {
+        return PhotoUploaded.newBuilder()
+                .setPhoto(command.getPhoto())
+                .build();
     }
 }

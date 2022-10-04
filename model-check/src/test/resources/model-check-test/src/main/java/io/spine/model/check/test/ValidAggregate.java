@@ -24,28 +24,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.assemble;
+package io.spine.model.check.test;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.spine.base.EventMessage;
+import io.spine.model.check.test.command.*;
+import io.spine.model.check.test.event.*;
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Collections;
+import java.util.List;
 
-@DisplayName("`AssignLookup` should")
-class AssignLookupTest extends ModelAnnotationProcessorTest {
+/**
+ * An {@code Aggregate} with a valid command-handling method.
+ */
+class ValidAggregate extends Aggregate<String, ValidState, ValidState.Builder> {
 
-    @Override
-    protected ModelAnnotationProcessor processor() {
-        return new AssignLookup();
+    public ValidAggregate(String id) {
+        super(id);
     }
 
-    @Test
-    @DisplayName("support `spineDirRoot` option")
-    void supportSpineDirRoot() {
-        var opts = processor().getSupportedOptions();
-        assertEquals(1, opts.size());
-
-        assertThat(opts).contains(AssignLookup.OUTPUT_OPTION_NAME);
+    @Assign
+    List<? extends EventMessage> handle(SendMessage command) {
+        return Collections.emptyList();
     }
 }

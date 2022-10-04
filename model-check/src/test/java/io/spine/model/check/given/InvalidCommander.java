@@ -24,28 +24,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.assemble;
+package io.spine.model.check.given;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.spine.core.External;
+import io.spine.model.check.given.command.RestorePhoto;
+import io.spine.model.check.given.command.UploadPhoto;
+import io.spine.server.command.Command;
+import io.spine.server.procman.ProcessManager;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+/**
+ * A procman that declares an {@code external} command substitution method and thus shouldn't pass
+ * the model verification.
+ */
+public class InvalidCommander extends ProcessManager<String, EditState, EditState.Builder> {
 
-@DisplayName("`AssignLookup` should")
-class AssignLookupTest extends ModelAnnotationProcessorTest {
-
-    @Override
-    protected ModelAnnotationProcessor processor() {
-        return new AssignLookup();
+    protected InvalidCommander(String id) {
+        super(id);
     }
 
-    @Test
-    @DisplayName("support `spineDirRoot` option")
-    void supportSpineDirRoot() {
-        var opts = processor().getSupportedOptions();
-        assertEquals(1, opts.size());
-
-        assertThat(opts).contains(AssignLookup.OUTPUT_OPTION_NAME);
+    @Command
+    UploadPhoto handle(@External RestorePhoto command) {
+        return UploadPhoto.getDefaultInstance();
     }
 }

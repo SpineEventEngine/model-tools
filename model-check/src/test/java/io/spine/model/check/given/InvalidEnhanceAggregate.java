@@ -24,28 +24,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.assemble;
+package io.spine.model.check.given;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.spine.model.check.given.command.EnhancePhoto;
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+/**
+ * This aggregate declares a command-handling method that breaks the contract imposed by
+ * {@link Assign}, by having a return value that cannot be derived from
+ * {@link io.spine.base.EventMessage}.
+ */
+public class InvalidEnhanceAggregate extends Aggregate<String, EditState, EditState.Builder> {
 
-@DisplayName("`AssignLookup` should")
-class AssignLookupTest extends ModelAnnotationProcessorTest {
-
-    @Override
-    protected ModelAnnotationProcessor processor() {
-        return new AssignLookup();
-    }
-
-    @Test
-    @DisplayName("support `spineDirRoot` option")
-    void supportSpineDirRoot() {
-        var opts = processor().getSupportedOptions();
-        assertEquals(1, opts.size());
-
-        assertThat(opts).contains(AssignLookup.OUTPUT_OPTION_NAME);
+    @Assign
+    String handle(EnhancePhoto delete) {
+        return delete.getTitle();
     }
 }

@@ -23,29 +23,39 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+syntax = "proto3";
 
-package io.spine.model.assemble;
+package spine.model.check.given;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import "spine/options.proto";
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.model.check.given.event";
+option java_outer_classname = "EventsProto";
+option java_multiple_files = true;
 
-@DisplayName("`AssignLookup` should")
-class AssignLookupTest extends ModelAnnotationProcessorTest {
+message PhotoUploaded {
+    bytes photo = 1;
+    string title = 2;
+}
 
-    @Override
-    protected ModelAnnotationProcessor processor() {
-        return new AssignLookup();
-    }
+message PhotoEdited {
+    bytes new_photo = 1;
+    string editor = 2;
+}
 
-    @Test
-    @DisplayName("support `spineDirRoot` option")
-    void supportSpineDirRoot() {
-        var opts = processor().getSupportedOptions();
-        assertEquals(1, opts.size());
+message TitleChanged {
+    string new_title = 1;
+}
 
-        assertThat(opts).contains(AssignLookup.OUTPUT_OPTION_NAME);
-    }
+message PhotoDeleted {
+    string title = 1;
+}
+
+message PhotoEnhanced {
+    string title = 1;
+}
+
+message PhotoRestored {
+    string title = 1;
 }

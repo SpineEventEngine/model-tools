@@ -35,5 +35,6 @@ rootProject.name = "spine-model-tools"
 
 include(
     "model-assembler",
-    "model-verifier",
+    "model-check",
+    //"model-check-bundle"
 )

@@ -98,8 +98,8 @@ val toolBaseVersion: String by extra
 
 spinePublishing {
     modules = setOf(
-        "model-assembler",
-        "model-verifier",
+        // We only publish one module because it produces a fat JAR publication.
+        "model-check"
     )
 
     destinations = with(PublishingRepos) {

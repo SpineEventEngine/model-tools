@@ -24,28 +24,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.assemble;
+package io.spine.model.check.given;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.spine.model.check.given.command.RestorePhoto;
+import io.spine.model.check.given.event.PhotoRestored;
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.command.Assign;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+/**
+ * This aggregate declares a command-handling method that breaks the contract imposed by
+ * {@link Assign}, by having a {@code private} access modifier.
+ *
+ * <p>This should result in a warning.
+ */
+public class InvalidRestoreAggregate extends Aggregate<String, EditState, EditState.Builder> {
 
-@DisplayName("`AssignLookup` should")
-class AssignLookupTest extends ModelAnnotationProcessorTest {
-
-    @Override
-    protected ModelAnnotationProcessor processor() {
-        return new AssignLookup();
-    }
-
-    @Test
-    @DisplayName("support `spineDirRoot` option")
-    void supportSpineDirRoot() {
-        var opts = processor().getSupportedOptions();
-        assertEquals(1, opts.size());
-
-        assertThat(opts).contains(AssignLookup.OUTPUT_OPTION_NAME);
+    @SuppressWarnings("MethodMayBeStatic")
+    @Assign
+    private PhotoRestored handle(RestorePhoto restore){
+        return PhotoRestored.newBuilder()
+                .setTitle(restore.getTitle())
+                .build();
     }
 }

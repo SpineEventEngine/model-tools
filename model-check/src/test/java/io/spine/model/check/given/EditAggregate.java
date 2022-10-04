@@ -24,28 +24,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.assemble;
+package io.spine.model.check.given;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.spine.core.CommandContext;
+import io.spine.model.check.given.command.EditPhoto;
+import io.spine.model.check.given.event.PhotoEdited;
+import io.spine.server.aggregate.Aggregate;
+import io.spine.server.aggregate.Apply;
+import io.spine.server.command.Assign;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+public class EditAggregate extends Aggregate<String, EditState, EditState.Builder> {
 
-@DisplayName("`AssignLookup` should")
-class AssignLookupTest extends ModelAnnotationProcessorTest {
-
-    @Override
-    protected ModelAnnotationProcessor processor() {
-        return new AssignLookup();
+    @Assign
+    PhotoEdited handle(EditPhoto command, CommandContext ctx) {
+        return PhotoEdited.newBuilder()
+                .setNewPhoto(command.getNewPhoto())
+                .setEditor(ctx.actor().getValue())
+                .build();
     }
 
-    @Test
-    @DisplayName("support `spineDirRoot` option")
-    void supportSpineDirRoot() {
-        var opts = processor().getSupportedOptions();
-        assertEquals(1, opts.size());
-
-        assertThat(opts).contains(AssignLookup.OUTPUT_OPTION_NAME);
+    @Apply
+    private void on(PhotoEdited event) {
+        builder().setEditor(event.getEditor());
     }
 }

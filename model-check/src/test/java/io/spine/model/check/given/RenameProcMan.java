@@ -24,28 +24,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.model.assemble;
+package io.spine.model.check.given;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.spine.core.EventContext;
+import io.spine.model.check.given.command.ChangeTitle;
+import io.spine.model.check.given.event.TitleChanged;
+import io.spine.server.aggregate.Apply;
+import io.spine.server.command.Assign;
+import io.spine.server.procman.ProcessManager;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+public class RenameProcMan extends ProcessManager<String, RenameState, RenameState.Builder> {
 
-@DisplayName("`AssignLookup` should")
-class AssignLookupTest extends ModelAnnotationProcessorTest {
-
-    @Override
-    protected ModelAnnotationProcessor processor() {
-        return new AssignLookup();
+    protected RenameProcMan(String id) {
+        super(id);
     }
 
-    @Test
-    @DisplayName("support `spineDirRoot` option")
-    void supportSpineDirRoot() {
-        var opts = processor().getSupportedOptions();
-        assertEquals(1, opts.size());
+    @Assign
+    TitleChanged handle(ChangeTitle command) {
+        return TitleChanged.newBuilder()
+                .setNewTitle(command.getNewTitle())
+                .build();
+    }
 
-        assertThat(opts).contains(AssignLookup.OUTPUT_OPTION_NAME);
+    @Apply
+    private void on(TitleChanged event, EventContext context) {
+        builder().setEditor(context.actor()
+                                   .getValue());
     }
 }
