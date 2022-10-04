@@ -24,8 +24,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.internal.gradle.publish.IncrementGuard
+
 buildscript {
     apply(from = "$rootDir/version.gradle.kts")
+}
+
+plugins {
+    `maven-publish`
+    id("com.github.johnrengelman.shadow").version("7.1.2")
+}
+
+apply<IncrementGuard>()
+
+repositories {
+    mavenCentral()
 }
 
 val coreJavaVersion: String by extra
@@ -34,7 +47,8 @@ val mcJavaVersion: String by extra
 val baseVersion: String by extra
 
 dependencies {
-    implementation(gradleApi())
+    shadow(localGroovy())
+    shadow(gradleApi())
     implementation("io.spine:spine-server:$coreJavaVersion")
     implementation("io.spine.tools:spine-plugin-base:$toolBaseVersion")
 
@@ -48,6 +62,92 @@ dependencies {
 
 tasks.test {
     dependsOn("publishToMavenLocal",
-              ":model-check-bundle:publishToMavenLocal")
+              ":model-check:publishToMavenLocal")
 }
 
+/** The publishing settings from the root project. */
+val spinePublishing = rootProject.the<io.spine.internal.gradle.publish.SpinePublishing>()
+
+/**
+ * The ID of the far JAR artifact.
+ *
+ * This value is also used in `io.spine.tools.mc.java.gradle.Artifacts.kt`.
+ */
+val pArtifact = spinePublishing.artifactPrefix + "model-check-bundle"
+
+publishing {
+    publications {
+        create("fatJar", MavenPublication::class) {
+            artifactId = pArtifact
+            artifact(tasks.shadowJar)
+        }
+    }
+}
+
+/**
+ * Avoiding Gradle warning on disabling execution optimization because of
+ * missing explicit dependency.
+ */
+val publishFatJarPublicationToMavenLocal: Task by tasks.getting {
+    dependsOn(tasks.jar)
+}
+
+tasks.publish {
+    dependsOn(tasks.shadowJar)
+}
+
+tasks.shadowJar {
+    exclude(
+        /**
+         * Exclude Gradle types to reduce the size of the resulting JAR.
+         *
+         * Those required for the plugins are available at runtime anyway.
+         */
+        "org/gradle/**",
+
+        /**
+         * Exclude Gradle resources in the root of the JAR.
+         */
+        "gradle-**",
+
+        /**
+         * Exclude everything Groovy.
+         */
+        "groovy**",
+
+        /**
+         * Exclude GitHub Java Parser used by Groovy.
+         */
+        "com/github/javaparser/**",
+
+        /**
+         * Exclude Kotlin runtime.
+         */
+        "kotlin/**",
+
+        /**
+         * Remove all third-party plugin declarations as well.
+         *
+         * They should be loaded from their respective dependencies.
+         */
+        "META-INF/gradle-plugins/com**",
+        "META-INF/gradle-plugins/net**",
+        "META-INF/gradle-plugins/org**"
+    )
+
+    isZip64 = true  /* The archive has way too many items. So using the Zip64 mode. */
+    archiveClassifier.set("")  /** To prevent Gradle setting something like `osx-x86_64`. */
+    mergeServiceFiles("desc.ref")
+    mergeServiceFiles("services/io.spine.option.OptionsProvider")
+}
+
+project.afterEvaluate {
+    /**
+     * Avoid Gradle warning on execution optimisation.
+     * Presumably, this dependency should be configured by McJava.
+     * Until then, have this done explicitly.
+     */
+    val sourcesJar: Task by tasks.getting
+    val generateProto: Task by tasks.getting
+    sourcesJar.dependsOn(generateProto)
+}

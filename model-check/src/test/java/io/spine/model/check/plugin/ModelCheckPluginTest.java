@@ -124,7 +124,6 @@ class ModelCheckPluginTest {
         return GradleProject.setupAt(tempDir)
                 .fromResources(PROJECT_NAME, matching)
                 .copyBuildSrc()
-                .enableRunnerDebug()
                 .create();
     }
 }
