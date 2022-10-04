@@ -25,6 +25,7 @@
  */
 
 import io.spine.internal.gradle.publish.IncrementGuard
+import io.spine.internal.gradle.publish.SpinePublishing
 
 buildscript {
     apply(from = "$rootDir/version.gradle.kts")
@@ -66,7 +67,7 @@ tasks.test {
 }
 
 /** The publishing settings from the root project. */
-val spinePublishing = rootProject.the<io.spine.internal.gradle.publish.SpinePublishing>()
+val spinePublishing = rootProject.the<SpinePublishing>()
 
 /**
  * The ID of the far JAR artifact.
