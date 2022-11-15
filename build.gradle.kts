@@ -24,10 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Dokka
 import io.spine.internal.dependency.ErrorProne
 import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.JUnit
+import io.spine.internal.dependency.Spine
 import io.spine.internal.gradle.publish.IncrementGuard
 import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.checkstyle.CheckStyleConfig
@@ -66,12 +66,6 @@ plugins {
     protobuf
     errorprone
 }
-
-apply(from = "$rootDir/version.gradle.kts")
-val baseVersion: String by extra
-val timeVersion: String by extra
-val coreJavaVersion: String by extra
-val toolBaseVersion: String by extra
 
 spinePublishing {
     modules = setOf(
@@ -149,15 +143,17 @@ subprojects {
         }
     }
 
+    val spine = Spine(project)
+
     dependencies {
         ErrorProne.apply {
             errorprone(core)
         }
 
-        api("io.spine:spine-base:$baseVersion")
+        api(spine.base)
 
         testImplementation(JUnit.runner)
-        testImplementation("io.spine.tools:spine-testlib:$baseVersion")
+        testImplementation(spine.testlib)
     }
 
     configurations {
@@ -167,9 +163,6 @@ subprojects {
         all {
             resolutionStrategy {
                 force(
-                    "org.jetbrains.dokka:dokka-base:${Dokka.version}",
-                    "org.jetbrains.dokka:dokka-analysis:${Dokka.version}",
-
                     /* Force the version of gRPC used by the `:client` module over the one
                        set by `mc-java` in the `:core` module when specifying compiler artifact
                        for the gRPC plugin.
@@ -177,13 +170,10 @@ subprojects {
                        .configureProtocPlugins() method which sets the version from resources. */
                     "io.grpc:protoc-gen-grpc-java:${Grpc.version}",
 
-                    "io.spine:spine-base:$baseVersion",
-                    "io.spine:spine-validate:$baseVersion",
-                    "io.spine:spine-time:$timeVersion",
-                    "io.spine:spine-server:$coreJavaVersion",
-                    "io.spine.tools:spine-testlib:$baseVersion",
-                    "io.spine.tools:spine-plugin-base:$toolBaseVersion",
-                    "io.spine.tools:spine-tool-base:$toolBaseVersion",
+                    spine.base,
+                    spine.validate,
+                    spine.testlib,
+
                     Grpc.core,
                     Grpc.protobuf,
                     Grpc.stub
