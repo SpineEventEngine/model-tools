@@ -50,30 +50,13 @@ import io.spine.internal.gradle.testing.registerTestTasks
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
-    apply(from = "$rootDir/version.gradle.kts")
-
     standardSpineSdkRepositories()
 
-    val kotlinVersion = io.spine.internal.dependency.Kotlin.version
-    val baseVersion: String by extra
-    val toolBaseVersion: String by extra
-    val mcJavaVersion: String by extra
-
     dependencies {
-        classpath("io.spine.tools:spine-mc-java-plugins:${mcJavaVersion}:all")
+        classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
     }
 
     io.spine.internal.gradle.doForceVersions(configurations)
-    configurations.all {
-        resolutionStrategy {
-            force(
-                "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
-                "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion",
-                "io.spine:spine-base:$baseVersion",
-                "io.spine.tools:spine-tool-base:$toolBaseVersion"
-            )
-        }
-    }
 }
 
 plugins {
