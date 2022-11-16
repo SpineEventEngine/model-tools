@@ -29,6 +29,7 @@ import io.spine.internal.gradle.publish.SpinePublishing
 
 plugins {
     `maven-publish`
+    `detekt-code-analysis`
     id("com.github.johnrengelman.shadow").version("7.1.2")
 }
 

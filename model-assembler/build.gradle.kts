@@ -26,6 +26,10 @@
 
 import io.spine.internal.dependency.Spine
 
+plugins {
+    `detekt-code-analysis`
+}
+
 dependencies {
     val spine = Spine(project)
     implementation(spine.server)
