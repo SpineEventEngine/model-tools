@@ -26,7 +26,12 @@
 
 /**
  * The version of this library for publishing.
- *
- * For dependencies on Spine modules please see [io.spine.internal.dependency.Spine].
  */
 val versionToPublish: String by extra("2.0.0-SNAPSHOT.121")
+
+val baseVersion: String by extra("2.0.0-SNAPSHOT.107")
+val coreVersion: String by extra("2.0.0-SNAPSHOT.108")
+val baseTypesVersion: String by extra("2.0.0-SNAPSHOT.97")
+val timeVersion: String by extra("2.0.0-SNAPSHOT.96")
+val toolBaseVersion: String by extra("2.0.0-SNAPSHOT.95")
+val mcJavaVersion: String by extra("2.0.0-SNAPSHOT.99")

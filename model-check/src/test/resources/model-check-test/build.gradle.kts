@@ -41,10 +41,10 @@ buildscript {
 
     standardSpineSdkRepositories()
 
+    val spine = io.spine.internal.dependency.Spine(rootProject)
     dependencies {
         classpath(io.spine.internal.dependency.Protobuf.GradlePlugin.lib)
-        classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
-        classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
+        classpath(spine.mcJavaPlugin)
         classpath("io.spine.tools:spine-model-check-bundle:${versionToPublish}")
     }
 

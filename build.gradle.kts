@@ -53,8 +53,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 buildscript {
     standardSpineSdkRepositories()
 
+    apply(from = "$rootDir/version.gradle.kts")
+    val spine = io.spine.internal.dependency.Spine(rootProject)
     dependencies {
-        classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
+        classpath(spine.mcJavaPlugin)
     }
 
     io.spine.internal.gradle.doForceVersions(configurations)
@@ -172,7 +174,7 @@ subprojects {
                     "io.grpc:protoc-gen-grpc-java:${Grpc.version}",
 
                     spine.base,
-                    spine.validation.runtime,
+                    spine.validate,
                     spine.testlib,
 
                     Grpc.core,

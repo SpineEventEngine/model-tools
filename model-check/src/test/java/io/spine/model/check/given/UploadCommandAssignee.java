@@ -28,10 +28,10 @@ package io.spine.model.check.given;
 
 import io.spine.model.check.given.command.UploadPhoto;
 import io.spine.model.check.given.event.PhotoUploaded;
-import io.spine.server.command.AbstractAssignee;
+import io.spine.server.command.AbstractCommandAssignee;
 import io.spine.server.command.Assign;
 
-public class UploadCommandAssignee extends AbstractAssignee {
+public class UploadCommandAssignee extends AbstractCommandAssignee {
 
     @Assign
     PhotoUploaded handle(UploadPhoto command) {
