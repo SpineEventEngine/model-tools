@@ -24,14 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Dokka
 import io.spine.internal.dependency.ErrorProne
 import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.JUnit
+import io.spine.internal.dependency.Spine
 import io.spine.internal.gradle.publish.IncrementGuard
 import io.spine.internal.gradle.VersionWriter
-import io.spine.internal.gradle.applyGitHubPackages
-import io.spine.internal.gradle.applyStandard
 import io.spine.internal.gradle.checkstyle.CheckStyleConfig
 import io.spine.internal.gradle.excludeProtobufLite
 import io.spine.internal.gradle.forceVersions
@@ -46,55 +44,31 @@ import io.spine.internal.gradle.publish.spinePublishing
 import io.spine.internal.gradle.report.coverage.JacocoConfig
 import io.spine.internal.gradle.report.license.LicenseReporter
 import io.spine.internal.gradle.report.pom.PomGenerator
+import io.spine.internal.gradle.standardToSpineSdk
 import io.spine.internal.gradle.testing.configureLogging
 import io.spine.internal.gradle.testing.registerTestTasks
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+@Suppress("RemoveRedundantQualifierName")
 buildscript {
+    standardSpineSdkRepositories()
+
     apply(from = "$rootDir/version.gradle.kts")
-
-    io.spine.internal.gradle.doApplyStandard(repositories)
-    io.spine.internal.gradle.doApplyGitHubPackages(repositories, "base", rootProject)
-    io.spine.internal.gradle.doApplyGitHubPackages(repositories, "tool-base", rootProject)
-
-    val kotlinVersion = io.spine.internal.dependency.Kotlin.version
-    val baseVersion: String by extra
-    val toolBaseVersion: String by extra
-    val mcJavaVersion: String by extra
-
+    val spine = io.spine.internal.dependency.Spine(rootProject)
     dependencies {
-        classpath("io.spine.tools:spine-mc-java-plugins:${mcJavaVersion}:all")
+        classpath(spine.mcJavaPlugin)
     }
 
     io.spine.internal.gradle.doForceVersions(configurations)
-    configurations.all {
-        resolutionStrategy {
-            force(
-                "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
-                "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion",
-                "io.spine:spine-base:$baseVersion",
-                "io.spine.tools:spine-tool-base:$toolBaseVersion"
-            )
-        }
-    }
 }
 
-@Suppress("RemoveRedundantQualifierName") // Cannot use imports here.
 plugins {
     `java-library`
     kotlin("jvm")
     idea
-    id(io.spine.internal.dependency.Protobuf.GradlePlugin.id)
-    id(io.spine.internal.dependency.ErrorProne.GradlePlugin.id)
+    protobuf
+    errorprone
 }
-
-repositories.applyStandard()
-
-apply(from = "$rootDir/version.gradle.kts")
-val baseVersion: String by extra
-val timeVersion: String by extra
-val coreJavaVersion: String by extra
-val toolBaseVersion: String by extra
 
 spinePublishing {
     modules = setOf(
@@ -128,18 +102,13 @@ allprojects {
 
     group = "io.spine.tools"
     version = extra["versionToPublish"]!!
+
+    repositories {
+        standardToSpineSdk()
+    }
 }
 
 subprojects {
-
-    repositories.applyStandard()
-    repositories.applyGitHubPackages(project,
-        "base",
-        "core-java",
-        "tool-base",
-        "validation"
-    )
-
     apply {
         plugin("java-library")
         plugin("jacoco")
@@ -177,15 +146,17 @@ subprojects {
         }
     }
 
+    val spine = Spine(project)
+
     dependencies {
         ErrorProne.apply {
             errorprone(core)
         }
 
-        api("io.spine:spine-base:$baseVersion")
+        api(spine.base)
 
         testImplementation(JUnit.runner)
-        testImplementation("io.spine.tools:spine-testlib:$baseVersion")
+        testImplementation(spine.testlib)
     }
 
     configurations {
@@ -195,9 +166,6 @@ subprojects {
         all {
             resolutionStrategy {
                 force(
-                    "org.jetbrains.dokka:dokka-base:${Dokka.version}",
-                    "org.jetbrains.dokka:dokka-analysis:${Dokka.version}",
-
                     /* Force the version of gRPC used by the `:client` module over the one
                        set by `mc-java` in the `:core` module when specifying compiler artifact
                        for the gRPC plugin.
@@ -205,13 +173,10 @@ subprojects {
                        .configureProtocPlugins() method which sets the version from resources. */
                     "io.grpc:protoc-gen-grpc-java:${Grpc.version}",
 
-                    "io.spine:spine-base:$baseVersion",
-                    "io.spine:spine-validate:$baseVersion",
-                    "io.spine:spine-time:$timeVersion",
-                    "io.spine:spine-server:$coreJavaVersion",
-                    "io.spine.tools:spine-testlib:$baseVersion",
-                    "io.spine.tools:spine-plugin-base:$toolBaseVersion",
-                    "io.spine.tools:spine-tool-base:$toolBaseVersion",
+                    spine.base,
+                    spine.validate,
+                    spine.testlib,
+
                     Grpc.core,
                     Grpc.protobuf,
                     Grpc.stub

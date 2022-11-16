@@ -24,41 +24,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.gradle.publish.IncrementGuard
+import io.spine.internal.dependency.Spine
 import io.spine.internal.gradle.publish.SpinePublishing
-
-buildscript {
-    apply(from = "$rootDir/version.gradle.kts")
-}
 
 plugins {
     `maven-publish`
+    `detekt-code-analysis`
     id("com.github.johnrengelman.shadow").version("7.1.2")
 }
-
-apply<IncrementGuard>()
-
-repositories {
-    mavenCentral()
-}
-
-val coreJavaVersion: String by extra
-val toolBaseVersion: String by extra
-val mcJavaVersion: String by extra
-val baseVersion: String by extra
 
 dependencies {
     shadow(localGroovy())
     shadow(gradleApi())
-    implementation("io.spine:spine-server:$coreJavaVersion")
-    implementation("io.spine.tools:spine-plugin-base:$toolBaseVersion")
+
+    val spine = Spine(project)
+
+    implementation(spine.server)
+    implementation(spine.pluginBase)
 
     implementation(project(":model-assembler"))
 
     testImplementation(gradleTestKit())
-    testImplementation("io.spine.tools:spine-testlib:$baseVersion")
-    testImplementation("io.spine.tools:spine-plugin-testlib:$toolBaseVersion")
-    testImplementation("io.spine.tools:spine-testutil-server:$coreJavaVersion")
+    testImplementation(spine.testlib)
+    testImplementation(spine.pluginTestlib)
+    testImplementation(spine.coreJava.testUtilServer)
 }
 
 tasks.test {

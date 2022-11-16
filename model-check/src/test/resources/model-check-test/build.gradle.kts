@@ -24,7 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.gradle.applyStandard
+import io.spine.internal.dependency.Spine
+import io.spine.internal.gradle.standardToSpineSdk
 import org.gradle.api.file.SourceDirectorySet
 
 buildscript {
@@ -33,43 +34,21 @@ buildscript {
     // The script defines `enclosingRootDir` variable that we use below.
     //
     apply(from = "$rootDir/test-env.gradle")
-
-    // Applying from `version.gradle.kts` inside the `buildscript` section to reuse the properties.
-    //
-    // As long as `buildscript` section is always evaluated first, we need to apply
-    // `version.gradle.kts` explicitly here.
-    //
     val enclosingRootDir: String by extra
+
     apply(from = "${enclosingRootDir}/version.gradle.kts")
-
-    io.spine.internal.gradle.doApplyStandard(repositories)
-
-    val baseVersion: String by extra
-    val coreJavaVersion: String by extra
-    val timeVersion: String by extra
-    val toolBaseVersion: String by extra
-    val mcJavaVersion: String by extra
     val versionToPublish: String by extra
 
-    io.spine.internal.gradle.doForceVersions(configurations)
+    standardSpineSdkRepositories()
+
+    val spine = io.spine.internal.dependency.Spine(rootProject)
     dependencies {
         classpath(io.spine.internal.dependency.Protobuf.GradlePlugin.lib)
-        classpath("io.spine.tools:spine-mc-java:${mcJavaVersion}")
+        classpath(spine.mcJavaPlugin)
         classpath("io.spine.tools:spine-model-check-bundle:${versionToPublish}")
     }
 
-    configurations.all {
-        resolutionStrategy {
-            force(
-                "io.spine:spine-base:$baseVersion",
-                "io.spine:spine-validate:$baseVersion",
-                "io.spine:spine-time:$timeVersion",
-                "io.spine:spine-server:$coreJavaVersion",
-                "io.spine.tools:spine-tool-base:$toolBaseVersion",
-                "io.spine.tools:spine-plugin-base:$toolBaseVersion",
-            )
-        }
-    }
+    io.spine.internal.gradle.doForceVersions(configurations)
 }
 
 plugins {
@@ -80,21 +59,17 @@ apply(from = "$rootDir/test-env.gradle")
 val enclosingRootDir: String by extra
 
 apply(from = "$enclosingRootDir/version.gradle.kts")
-val baseVersion: String by extra
-val baseTypesVersion: String by extra
-val coreJavaVersion: String by extra
-val toolBaseVersion: String by extra
 val versionToPublish: String by extra
 
-val scriptsPath = io.spine.internal.gradle.Scripts.commonPath
 apply {
     plugin("com.google.protobuf")
     plugin("io.spine.mc-java")
     plugin("io.spine.tools.spine-model-check")
-    from("$enclosingRootDir/version.gradle.kts")
 }
 
-repositories.applyStandard()
+repositories {
+    standardToSpineSdk()
+}
 
 tasks.compileJava {
     options.compilerArgs.addAll(listOf(
@@ -105,9 +80,10 @@ tasks.compileJava {
 }
 
 dependencies {
-    implementation("io.spine:spine-validate:$baseVersion")
-    implementation("io.spine:spine-server:$coreJavaVersion")
-    implementation("io.spine:spine-base-types:$baseTypesVersion")
+    val spine = Spine(project)
+    implementation(spine.validation.runtime)
+    implementation(spine.server)
+    implementation(spine.baseTypes)
     annotationProcessor("io.spine.tools:spine-model-check-bundle:$versionToPublish")
 }
 
@@ -131,9 +107,3 @@ sourceSets {
         (extensions["proto"] as SourceDirectorySet).srcDirs("$projectDir/src/main/proto")
     }
 }
-
-//TODO:2021-08-03:alexander.yevsyukov: Turn to WARN and investigate duplicates.
-// see https://github.com/SpineEventEngine/base/issues/657
-val duplicatesStrategy = DuplicatesStrategy.INCLUDE
-tasks.processResources.get().duplicatesStrategy = duplicatesStrategy
-tasks.processTestResources.get().duplicatesStrategy = duplicatesStrategy

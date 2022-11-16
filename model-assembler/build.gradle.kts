@@ -24,10 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val baseVersion: String by extra
-val coreJavaVersion: String by extra
+import io.spine.internal.dependency.Spine
+
+plugins {
+    `detekt-code-analysis`
+}
+
 dependencies {
-    implementation("io.spine:spine-server:$coreJavaVersion")
-    implementation("io.spine:spine-validate:$baseVersion")
-    testImplementation("io.spine.tools:spine-testlib:$baseVersion")
+    val spine = Spine(project)
+    implementation(spine.server)
+    implementation(spine.validate)
+    testImplementation(spine.testlib)
 }
