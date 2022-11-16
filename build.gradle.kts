@@ -49,6 +49,7 @@ import io.spine.internal.gradle.testing.configureLogging
 import io.spine.internal.gradle.testing.registerTestTasks
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+@Suppress("RemoveRedundantQualifierName")
 buildscript {
     standardSpineSdkRepositories()
 
@@ -171,7 +172,7 @@ subprojects {
                     "io.grpc:protoc-gen-grpc-java:${Grpc.version}",
 
                     spine.base,
-                    spine.validate,
+                    spine.validation.runtime,
                     spine.testlib,
 
                     Grpc.core,

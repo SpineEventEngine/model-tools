@@ -29,6 +29,6 @@ import io.spine.internal.dependency.Spine
 dependencies {
     val spine = Spine(project)
     implementation(spine.server)
-    implementation(spine.validate)
+    implementation(spine.validation.runtime)
     testImplementation(spine.testlib)
 }
