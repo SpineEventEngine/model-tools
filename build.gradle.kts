@@ -53,9 +53,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 buildscript {
     standardSpineSdkRepositories()
 
-    val spine = io.spine.internal.dependency.Spine(rootProject)
     dependencies {
-        classpath(spine.mcJavaPlugin)
+        classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
     }
 
     io.spine.internal.gradle.doForceVersions(configurations)
