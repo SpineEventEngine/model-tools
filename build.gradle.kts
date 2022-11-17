@@ -171,7 +171,7 @@ subprojects {
                     "io.grpc:protoc-gen-grpc-java:${Grpc.version}",
 
                     spine.base,
-                    spine.validate,
+                    spine.validation.runtime,
                     spine.testlib,
 
                     Grpc.core,
