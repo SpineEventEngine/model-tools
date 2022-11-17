@@ -53,7 +53,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 buildscript {
     standardSpineSdkRepositories()
 
-    apply(from = "$rootDir/version.gradle.kts")
     val spine = io.spine.internal.dependency.Spine(rootProject)
     dependencies {
         classpath(spine.mcJavaPlugin)
@@ -75,7 +74,6 @@ spinePublishing {
         // We only publish one module because it produces a fat JAR publication.
         "model-check"
     )
-
     destinations = with(PublishingRepos) {
         setOf(
             cloudRepo,
@@ -83,7 +81,6 @@ spinePublishing {
             cloudArtifactRegistry
         )
     }
-
     dokkaJar {
         enabled = true
     }
