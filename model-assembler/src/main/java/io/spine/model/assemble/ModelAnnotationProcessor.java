@@ -50,8 +50,8 @@ import static javax.tools.Diagnostic.Kind.WARNING;
  * An abstract base for the Spine
  * {@linkplain javax.annotation.processing.Processor annotation processors}.
  *
- * <p>This class provides the handy lifecycle for the processors basing on their round-oriented
- * nature.
+ * <p>This class provides the handy lifecycle for the processors basing on their
+ * round-oriented nature.
  *
  * <p>Be sure to add the fully qualified name of your implementation of this class to
  * {@code resources/META_INF/services/javax.annotation.processing.Processor} to make it visible

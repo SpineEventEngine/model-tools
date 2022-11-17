@@ -93,7 +93,7 @@ public final class ModelCheckPlugin implements Plugin<Project>, Logging {
     /**
      * The action performing the model processing.
      *
-     * <p>The action is executed only if the passed {@code rawModelPath} is present.
+     * <p>It is executed only if the passed {@code rawModelPath} is present.
      *
      * <p>Reads the {@link CommandReceivers} from the given file and
      * {@linkplain #verifyModel processes} the model.

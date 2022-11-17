@@ -27,7 +27,7 @@
 package io.spine.model.check.test;
 
 import io.spine.base.EventMessage;
-import io.spine.server.command.AbstractCommandAssignee;
+import io.spine.server.command.AbstractAssignee;
 import io.spine.server.command.Assign;
 
 import java.util.List;
@@ -38,9 +38,9 @@ import io.spine.model.check.test.command.*;
 import io.spine.model.check.test.event.*;
 
 /**
- * A {@code CommandAssignee} with a valid command-handling method.
+ * An {@code Assignee} with a valid command-handling method.
  */
-public class ValidCommandAssignee extends AbstractCommandAssignee {
+public class ValidCommandAssignee extends AbstractAssignee {
 
     @Assign
     List<? extends EventMessage> handle(SendLink command) {
