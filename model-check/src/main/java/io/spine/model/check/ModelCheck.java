@@ -63,9 +63,10 @@ public class ModelCheck implements Logging {
     private final URLClassLoader projectClassLoader;
 
     /**
-     * Creates a new instance of the {@code ModelVerifier}.
+     * Creates a new instance.
      *
-     * @param project the Gradle project to verify the model upon
+     * @param project
+     *         the Gradle project to verify the model upon
      */
     public ModelCheck(Project project) {
         this.projectClassLoader = createClassLoader(project);
@@ -74,7 +75,8 @@ public class ModelCheck implements Logging {
     /**
      * Verifies Spine model upon the given Gradle project.
      *
-     * @param receivers the listing of the Spine model classes
+     * @param receivers
+     *         the listing of the Spine model classes
      */
     public void verify(CommandReceivers receivers) {
         var classSet = new ClassSet(projectClassLoader,

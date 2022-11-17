@@ -53,10 +53,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 buildscript {
     standardSpineSdkRepositories()
 
-    apply(from = "$rootDir/version.gradle.kts")
-    val spine = io.spine.internal.dependency.Spine(rootProject)
     dependencies {
-        classpath(spine.mcJavaPlugin)
+        classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
     }
 
     io.spine.internal.gradle.doForceVersions(configurations)
@@ -75,7 +73,6 @@ spinePublishing {
         // We only publish one module because it produces a fat JAR publication.
         "model-check"
     )
-
     destinations = with(PublishingRepos) {
         setOf(
             cloudRepo,
@@ -83,7 +80,6 @@ spinePublishing {
             cloudArtifactRegistry
         )
     }
-
     dokkaJar {
         enabled = true
     }
@@ -174,7 +170,7 @@ subprojects {
                     "io.grpc:protoc-gen-grpc-java:${Grpc.version}",
 
                     spine.base,
-                    spine.validate,
+                    spine.validation.runtime,
                     spine.testlib,
 
                     Grpc.core,

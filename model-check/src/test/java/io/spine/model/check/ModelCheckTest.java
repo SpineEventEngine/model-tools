@@ -36,8 +36,8 @@ import io.spine.model.check.given.InvalidEnhanceAggregate;
 import io.spine.model.check.given.InvalidRestoreAggregate;
 import io.spine.model.check.given.RenameProcMan;
 import io.spine.model.check.given.UploadCommandAssignee;
-import io.spine.server.command.model.CommandAssigneeSignature;
-import io.spine.server.model.DuplicateCommandHandlerError;
+import io.spine.server.command.model.AssigneeSignature;
+import io.spine.server.model.DuplicateCommandReceptorError;
 import io.spine.server.model.ExternalCommandReceiverMethodError;
 import io.spine.server.model.SignatureMismatchException;
 import io.spine.testing.TempDir;
@@ -125,7 +125,7 @@ class ModelCheckTest {
                 .addCommandReceivingType(firstType)
                 .addCommandReceivingType(secondType)
                 .build();
-        assertThrows(DuplicateCommandHandlerError.class, () -> verifier.verify(spineModel));
+        assertThrows(DuplicateCommandReceptorError.class, () -> verifier.verify(spineModel));
     }
 
     @Test
@@ -146,7 +146,7 @@ class ModelCheckTest {
         private final Class<?> aggregateClass = InvalidRestoreAggregate.class;
 
         WarnLogging() {
-            super(CommandAssigneeSignature.class, Level.WARNING);
+            super(AssigneeSignature.class, Level.WARNING);
         }
 
         @BeforeEach

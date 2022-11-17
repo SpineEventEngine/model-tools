@@ -50,7 +50,7 @@ import static io.spine.protobuf.Messages.isDefault;
 /**
  * An annotation processor for the {@link Assign @Assign} annotation.
  *
- * <p>Collects the types which contain methods {@linkplain Assign assigned} to handle commands
+ * <p>Collects the types, which contain methods {@linkplain Assign assigned} to handle commands
  * and writes them into the {@code ${spineDirRoot}/.spine/spine_model.ser} file,
  * where "{@code spineDirRoot}" is the value of the <b>spineDirRoot</b> annotator option.
  *
@@ -67,13 +67,13 @@ public class AssignLookup extends ModelAnnotationProcessor {
     private static final String DEFAULT_OUTPUT_OPTION = ".";
 
     /**
-     * List of {@linkplain io.spine.server.command.CommandAssignee command assignee}s.
+     * List of {@linkplain io.spine.server.command.Assignee assignee}s.
      *
-     * @implNote The type of this filed implies that it can store {@code CommandReceiver}s,
-     *           which could be either {@code CommandAssignee} or {@code Commander}. But we are
+     * @implNote The type of this field implies that it can store {@code CommandReceiver}s,
+     *           which could be either {@code Assignee} or {@code Commander}. But we are
      *           going to store only assignees there.
      */
-    private final CommandReceivers.Builder commandAssignees = CommandReceivers.newBuilder();
+    private final CommandReceivers.Builder assignees = CommandReceivers.newBuilder();
 
     @Override
     protected Class<? extends Annotation> getAnnotationType() {
@@ -94,7 +94,7 @@ public class AssignLookup extends ModelAnnotationProcessor {
         var enclosingTypeElement = (TypeElement) element.getEnclosingElement();
         var typeName = enclosingTypeElement.getQualifiedName()
                                            .toString();
-        commandAssignees.addCommandReceivingType(typeName);
+        assignees.addCommandReceivingType(typeName);
     }
 
     @Override
@@ -107,41 +107,41 @@ public class AssignLookup extends ModelAnnotationProcessor {
     }
 
     /**
-     * Merges the currently built {@link AssignLookup#commandAssignees} with the pre-built one.
+     * Merges the currently built {@link AssignLookup#assignees} with the pre-built one.
      *
      * <p>If the file exists and is not empty, the message of type {@link CommandReceivers} is
-     * read from it and merged with the current commandAssignees by the rules of
+     * read from it and merged with the current {@code assignees} by the rules of
      * {@link com.google.protobuf.Message.Builder#mergeFrom(com.google.protobuf.Message)
      * Message.Builder.mergeFrom()}.
      *
      * @param file
-     *         the file which may or may not contain the pre-assembled commandAssignees
+     *         the file, which may or may not contain the pre-assembled {@code assignees}
      */
     @SuppressWarnings("CheckReturnValue") // calling builder
     private void mergeOldAssigneesFrom(File file) {
         var fileWithData = existsNonEmpty(file);
         if (fileWithData) {
             var preexistingModel = readExisting(file);
-            commandAssignees.mergeFrom(preexistingModel);
+            assignees.mergeFrom(preexistingModel);
         }
     }
 
     /**
-     * Writes the {@link AssignLookup#commandAssignees} to the given file.
+     * Writes the {@link AssignLookup#assignees} to the given file.
      *
      * <p>If the given file does not exist, this method creates it.
      *
-     * <p>The written commandAssignees will be cleaned from duplications in the repeated fields.
+     * <p>The written {@code assignees} will be cleaned from duplications in the repeated fields.
      *
      * <p>The I/O errors are handled by rethrowing them as {@link IllegalStateException}.
      *
      * @param file
-     *         an existing file to write the commandAssignees into
+     *         an existing file to write the {@code assignees} into
      */
     private void writeAssigneesTo(File file) {
         ensureFile(file);
         removeDuplicates();
-        var serializedModel = commandAssignees.vBuild();
+        var serializedModel = assignees.build();
         if (!isDefault(serializedModel)) {
             try (var out = new FileOutputStream(file)) {
                 serializedModel.writeTo(out);
@@ -152,21 +152,21 @@ public class AssignLookup extends ModelAnnotationProcessor {
     }
 
     /**
-     * Cleans the currently built {@link #commandAssignees} from the duplicates.
+     * Cleans the currently built {@link AssignLookup#assignees} from the duplicates.
      *
      * <p>Calling this method will cause the current list of assignees not to contain
      * duplicate entries in any {@code repeated} field.
      */
     @SuppressWarnings("CheckReturnValue") // calling builder
     private void removeDuplicates() {
-        var list = commandAssignees.getCommandReceivingTypeList();
+        var list = assignees.getCommandReceivingTypeList();
         Set<String> types = newTreeSet(list);
-        commandAssignees.clearCommandReceivingType()
-                        .addAllCommandReceivingType(types);
+        assignees.clearCommandReceivingType()
+                 .addAllCommandReceivingType(types);
     }
 
     /**
-     * Reads the existing {@link #commandAssignees} from the given file.
+     * Reads the existing {@link AssignLookup#assignees} from the given file.
      *
      * <p>The given file should exist.
      *
@@ -176,7 +176,7 @@ public class AssignLookup extends ModelAnnotationProcessor {
      *
      * @param file
      *         an existing file with a {@link CommandReceivers} message
-     * @return the read commandAssignees
+     * @return the read {@code assignees}
      */
     private static CommandReceivers readExisting(File file) {
         if (file.length() == 0) {
